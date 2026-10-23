@@ -65,9 +65,9 @@
     </label>
     <div class="tools__price" id="price" role="group" aria-label="Цена">
       <button type="button" data-p="0" aria-pressed="true">Любая<span> цена</span></button>
-      <button type="button" data-p="2000" aria-pressed="false">до 2&nbsp;000&nbsp;₽</button>
-      <button type="button" data-p="3000" aria-pressed="false">до 3&nbsp;000&nbsp;₽</button>
-      <button type="button" data-p="5000" aria-pressed="false">до 5&nbsp;000&nbsp;₽</button>
+      <button type="button" data-p="2000" aria-pressed="false">до 2&nbsp;000<span>&nbsp;₽</span></button>
+      <button type="button" data-p="3000" aria-pressed="false">до 3&nbsp;000<span>&nbsp;₽</span></button>
+      <button type="button" data-p="5000" aria-pressed="false">до 5&nbsp;000<span>&nbsp;₽</span></button>
     </div>
   </div>
   <div class="countries" id="countries" role="group" aria-label="Фильтр по стране"></div>
@@ -126,11 +126,13 @@
 <div class="sheet" id="sheet" hidden>
   <div class="sheet__scrim" data-close></div>
   <article class="sheet__card" role="dialog" aria-modal="true" aria-labelledby="sheetName">
-    <button class="sheet__x" type="button" data-close aria-label="Закрыть">×</button>
-    <div class="sheet__nav">
-      <button type="button" id="sheetPrev" aria-label="Предыдущее вино">‹</button>
-      <span id="sheetPos"></span>
-      <button type="button" id="sheetNext" aria-label="Следующее вино">›</button>
+    <div class="sheet__top">
+      <div class="sheet__nav">
+        <button type="button" id="sheetPrev" aria-label="Предыдущее вино">‹</button>
+        <span id="sheetPos"></span>
+        <button type="button" id="sheetNext" aria-label="Следующее вино">›</button>
+      </div>
+      <button class="sheet__x" type="button" data-close aria-label="Закрыть">×</button>
     </div>
     <div class="sheet__media" id="sheetMedia">
       <div class="sheet__main"><img id="sheetImg" alt=""></div>

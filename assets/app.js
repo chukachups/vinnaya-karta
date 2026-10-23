@@ -304,7 +304,7 @@
     if (w.img.glass) v.push(['В бокале', w.img.glass, true]);
     if (w.img.mood) v.push(['Фото', w.img.mood, false, true]);
     if (w.img.label) v.push(['Этикетка', w.img.label, false]);
-    media.style.setProperty('--c', tint(w));
+    media.parentElement.style.setProperty('--c', tint(w));
     views.innerHTML = v.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + x[0] + '</button>'; }).join('');
     function pick(i) {
       main.src = v[i][1]; mainBox.classList.toggle('is-white', v[i][2]); mainBox.classList.toggle('is-photo', !!v[i][3]);

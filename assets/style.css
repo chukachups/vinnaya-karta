@@ -181,7 +181,7 @@ html { scroll-padding-top: 140px; }
   clip-path: inset(100% 0 0 0 round 22px); transition: clip-path .6s var(--ease);
 }
 .card__glass--photo { object-fit: cover; padding: 0; }
-.sheet__main.is-photo img { width: 100%; height: 100%; max-height: none; object-fit: cover; }
+.sheet__main.is-photo img { object-fit: cover; }
 @media (hover: hover) {
   .card:hover .card__glass, .card:focus-visible .card__glass { clip-path: inset(0 0 0 0 round 22px); }
   .card:hover .card__bottle { transform: translateX(-50%) translateY(-8px); }
@@ -254,7 +254,9 @@ html { scroll-padding-top: 140px; }
 .sheet__views { top: auto; }
 .sheet__main { aspect-ratio: 5 / 6; border-radius: 18px; display: grid; place-items: center; overflow: hidden; }
 .sheet__main.is-white { background: var(--white); }
-.sheet__main img { max-height: 92%; width: auto; object-fit: contain; }
+.sheet__main { position: relative; }
+.sheet__main img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; padding: 4%; object-fit: contain; }
+.sheet__main.is-photo img { padding: 0; }
 .sheet__views { display: flex; gap: 8px; }
 .sheet__views button { flex: 1; padding: 10px 8px; border-radius: 999px; border: 1.5px solid var(--bottle); background: rgba(255, 255, 251, .6); cursor: pointer; font-size: 13px; font-weight: 700; }
 .sheet__views button[aria-pressed="true"] { background: var(--bottle); color: var(--straw); }
@@ -285,6 +287,7 @@ html { scroll-padding-top: 140px; }
 .fact p { margin: 10px 0 0; font-size: 14px; line-height: 1.6; color: var(--ink-2); }
 .btn { align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 26px; border-radius: 999px; background: var(--straw); color: var(--bottle); font-weight: 800; text-decoration: none; border: 2px solid var(--bottle); transition: background .25s; }
 .btn:hover { background: var(--straw-2); }
+.sheet__top { display: contents; }
 .sheet__nav { position: absolute; top: 14px; left: 14px; z-index: 3; display: flex; align-items: center; gap: 4px; padding: 3px; border-radius: 999px; background: rgba(255, 255, 251, .85); box-shadow: 0 2px 10px rgba(28, 42, 30, .12); }
 .sheet__nav button { width: 38px; height: 38px; border-radius: 50%; border: 0; background: var(--bottle); color: var(--straw); font-size: 22px; line-height: 1; cursor: pointer; }
 .sheet__nav button:disabled { opacity: .25; cursor: default; }
@@ -317,8 +320,11 @@ html { scroll-padding-top: 140px; }
   .tools__country { display: inline-flex; }
   .countries:not(.is-open) { display: none; }
   .countries .filter-label { display: none; }
+  .tools { flex-wrap: wrap; }
+  .tools__sort { flex: 1; min-width: 0; }
   .tools__sort span { display: none; }
-  .tools__price { width: 100%; flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+  .tools__sort select { width: 100%; }
+  .tools__price { width: 100%; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .tools__price::-webkit-scrollbar { display: none; }
   .poster__foot { grid-template-columns: 1fr; }
   .poster__stats { display: grid; grid-template-columns: repeat(4, auto); justify-content: space-between; }
@@ -326,10 +332,18 @@ html { scroll-padding-top: 140px; }
   .sheet { padding: 0; place-items: end stretch; }
   .sheet__card { grid-template-columns: 1fr; border-radius: 26px 26px 0 0; max-height: 92vh; animation-name: up; }
   .sheet__main { aspect-ratio: auto; height: clamp(200px, 32vh, 300px); }
-  .sheet__x { position: fixed; top: calc(8vh + 12px); right: 12px; }
-  .sheet__nav { position: fixed; top: calc(8vh + 12px); left: 12px; }
+  /* на телефоне кнопки — отдельной полосой над фото, она остаётся на месте при прокрутке окна */
+  .sheet__top { display: flex; align-items: center; justify-content: space-between; gap: 12px; position: sticky; top: 0; z-index: 4; padding: 14px 14px 10px; background: var(--c, #e8e5d4); }
+  .sheet__top::before { content: ""; position: absolute; top: 6px; left: 50%; width: 40px; height: 4px; margin-left: -20px; border-radius: 2px; background: rgba(28, 42, 30, .25); }
+  .sheet__x, .sheet__nav { position: static; }
+  .sheet__x { width: 40px; height: 40px; font-size: 22px; margin-left: auto; }
+  .sheet__nav { background: rgba(255, 255, 251, .7); box-shadow: none; }
+  .sheet__nav button { width: 34px; height: 34px; font-size: 20px; }
+  .sheet__nav button:disabled { opacity: 1; background: none; color: rgba(28, 42, 30, .25); }
+  .sheet__media { padding: 0 16px 16px; }
   .sheet__views button { padding: 8px 6px; }
-  .sheet__media > * { position: static; }
+  .sheet__info h2 { padding-right: 0; }
+  .sheet__media > * { position: relative; top: auto; }
   .sheet__info { padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px)); }
 }
 @keyframes up { from { opacity: 0; transform: translateY(60px); } }
@@ -352,8 +366,9 @@ html { scroll-padding-top: 140px; }
   .stamp--next > span::after { content: "Попробовать"; font-size: 10px; }
   .price { font-size: 18px; }
   .card__foot { flex-direction: column; align-items: flex-start; gap: 6px; }
-  .tools__price button { height: 36px; padding: 0 12px; font-size: 13px; }
+  .tools__price button { height: 36px; padding: 0 6px; font-size: 13px; }
   .tools__price button span { display: none; }
+  .sect h2 { font-size: clamp(26px, 8.6vw, 40px); }
   .pills { width: 100%; }
   .pills button { padding: 8px 12px; font-size: 13px; }
 }
