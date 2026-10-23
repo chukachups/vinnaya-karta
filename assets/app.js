@@ -16,10 +16,11 @@
   };
   var AROMAS = ['персик', 'грейпфрут', 'крыжовник', 'маракуйя', 'белые цветы', 'смородиновый лист', 'абрикос', 'мандарин',
     'чайная роза', 'личи', 'груша', 'жасмин', 'мускат', 'зелёное яблоко', 'дыня', 'лайм', 'бергамот', 'горные травы'];
-  // Точка у фильтра цвета — цвет самого вина в бокале.
-  var WINE_COLOR = { 'белое': '#f1e7a4', 'оранжевое': '#e9a95c', 'красное': '#7d1f2c', 'розовое': '#f2b8c0' };
-  var TYPE_COLOR = { 'вино': '#c9d8b0', 'игристое': '#f4ecc2', 'виски': '#c68a3e' };
-  var state = { tried: 'all', next: 'all', q: '', country: null, color: null, type: null };
+  // Категории в порядке на сайте; точка — цвет напитка в бокале.
+  var CATS = [['Белое', '#f1e7a4'], ['Оранжевое', '#e9a95c'], ['Розовое', '#f2b8c0'], ['Красное', '#7d1f2c'],
+    ['Игристое', '#f4ecc2'], ['Виски', '#c68a3e']];
+  var SLUG = { 'Белое': 'beloe', 'Оранжевое': 'oranzhevoe', 'Розовое': 'rozovoe', 'Красное': 'krasnoe', 'Игристое': 'igristoe', 'Виски': 'viski' };
+  var state = { tried: 'all', next: 'all', q: '', country: null, cat: null };
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -30,6 +31,11 @@
   function tint(w) { return COUNTRY[country(w)] || '#e8e5d4'; }
   function type(w) { return w.type || 'вино'; }
   function color(w) { return type(w) === 'виски' ? null : w.color || (/оранж/.test(w.sugar) ? 'оранжевое' : 'белое'); }
+  function cat(w) {
+    if (type(w) === 'виски') return 'Виски';
+    if (type(w) === 'игристое') return 'Игристое';
+    var c = color(w); return c.charAt(0).toUpperCase() + c.slice(1);
+  }
   // «белое сухое», «игристое брют», «виски, купажированный»; у оранжевых цвет уже в поле сахара.
   function kind(w) {
     if (type(w) === 'виски') return 'виски, ' + w.sugar;
@@ -87,26 +93,44 @@
   var line = AROMAS.map(function (a) { return '<span>' + a + '</span>'; }).join('');
   document.getElementById('ticker').innerHTML = line + line;
 
-  // ---- фильтры: цвет вина и страна (цвет подложки) ----
-  function tally(fn) { var o = {}; W.forEach(function (w) { var k = fn(w); if (k) o[k] = (o[k] || 0) + 1; }); return o; }
-  function chips(kind, counts, swatch) {
-    return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).map(function (c) {
-      return '<button type="button" data-k="' + kind + '" data-c="' + esc(c) + '" aria-pressed="false" style="--c:' + swatch(c) + '"><i></i>' +
-        esc(c.charAt(0).toUpperCase() + c.slice(1)) + ' <small>' + counts[c] + '</small></button>';
+  // ---- категории: главная градация сайта ----
+  var catBox = document.getElementById('cats');
+  function drawCats() {
+    var n = {}; W.forEach(function (w) { n[cat(w)] = (n[cat(w)] || 0) + 1; });
+    catBox.innerHTML = [['Все', null]].concat(CATS.filter(function (c) { return n[c[0]]; })).map(function (c) {
+      var on = (state.cat || 'Все') === c[0];
+      return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + on + '">' +
+        (c[1] ? '<i style="--c:' + c[1] + '"></i>' : '') + c[0] + '<sup>' + (c[1] ? n[c[0]] : W.length) + '</sup></button>';
     }).join('');
   }
+  catBox.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    state.cat = b.dataset.cat === 'Все' ? null : b.dataset.cat;
+    try { history.replaceState(null, '', state.cat ? '#' + SLUG[state.cat] : location.pathname); } catch (x) {}
+    drawCats(); drawCountries(); render();
+    var act = catBox.querySelector('[aria-pressed="true"]');
+    if (act && act.scrollIntoView) act.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+  });
+
+  // ---- страны (цвет подложки) — внутри выбранной категории ----
   var cbox = document.getElementById('countries');
-  cbox.innerHTML =
-    '<span class="filter-label">Тип</span>' + chips('type', tally(type), function (c) { return TYPE_COLOR[c] || '#eee'; }) +
-    '<span class="filter-label">Цвет</span>' + chips('color', tally(color), function (c) { return WINE_COLOR[c] || '#eee'; }) +
-    '<span class="filter-label">Страна</span>' + chips('country', tally(country), function (c) { return COUNTRY[c] || '#e8e5d4'; });
+  function drawCountries() {
+    var n = {};
+    W.forEach(function (w) { if (!state.cat || cat(w) === state.cat) n[country(w)] = (n[country(w)] || 0) + 1; });
+    if (state.country && !n[state.country]) state.country = null;
+    cbox.innerHTML = '<span class="filter-label">Страна</span>' + Object.keys(n).sort(function (a, b) { return n[b] - n[a]; }).map(function (c) {
+      return '<button type="button" data-c="' + esc(c) + '" aria-pressed="' + (c === state.country) + '" style="--c:' + (COUNTRY[c] || '#e8e5d4') + '"><i></i>' +
+        esc(c) + ' <small>' + n[c] + '</small></button>';
+    }).join('');
+  }
   cbox.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
-    var k = b.dataset.k;
-    state[k] = state[k] === b.dataset.c ? null : b.dataset.c;
-    cbox.querySelectorAll('button[data-k="' + k + '"]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.c === state[k])); });
-    render();
+    state.country = state.country === b.dataset.c ? null : b.dataset.c;
+    drawCountries(); render();
   });
+  // Ссылка вида …/#krasnoe сразу открывает категорию.
+  Object.keys(SLUG).forEach(function (k) { if (location.hash === '#' + SLUG[k]) state.cat = k; });
+  drawCats(); drawCountries();
 
   // ---- карточки ----
   function card(w) {
@@ -135,8 +159,7 @@
 
   function ok(w) {
     if (state.country && country(w) !== state.country) return false;
-    if (state.color && color(w) !== state.color) return false;
-    if (state.type && type(w) !== state.type) return false;
+    if (state.cat && cat(w) !== state.cat) return false;
     if (!state.q) return true;
     return [w.name, w.producer, w.region, w.grape, w.note, w.sugar].join(' ').toLowerCase().indexOf(state.q) >= 0;
   }
@@ -160,6 +183,11 @@
   function render() {
     fill('tried', [['ok', 'Отлично'], ['mid', 'Обычно'], ['bad', 'Не зашло']], state.tried);
     fill('next', [['ord', 'Заказано', byPrice], ['next', 'Ещё не пробовали', byPrice]], state.next);
+    // Счётчики у заголовков разделов — с учётом категории, страны и поиска.
+    var inTried = W.filter(function (w) { return ok(w) && TRIED.indexOf(w.status) >= 0; }).length;
+    var inNext = W.filter(function (w) { return ok(w) && TRIED.indexOf(w.status) < 0; }).length;
+    document.querySelector('#h-tried sup').textContent = inTried;
+    document.querySelector('#h-next sup').textContent = inNext;
   }
 
   document.querySelectorAll('.pills').forEach(function (box) {
