@@ -11,11 +11,15 @@
   var COUNTRY = {
     'Италия': '#d9e3c8', 'Россия': '#ecd6c6', 'Чили': '#cadcea', 'Франция': '#dcd5ea',
     'Грузия': '#f0d5b4', 'Австрия': '#cfe7d8', 'ЮАР': '#e8e0bd', 'Аргентина': '#c6dff0',
-    'Новая Зеландия': '#c4e4de', 'Португалия': '#ecd0d9'
+    'Новая Зеландия': '#c4e4de', 'Португалия': '#ecd0d9',
+    'Япония': '#f2d4dc', 'Шотландия': '#d8cbbd', 'Ирландия': '#cfe3b8'
   };
   var AROMAS = ['персик', 'грейпфрут', 'крыжовник', 'маракуйя', 'белые цветы', 'смородиновый лист', 'абрикос', 'мандарин',
     'чайная роза', 'личи', 'груша', 'жасмин', 'мускат', 'зелёное яблоко', 'дыня', 'лайм', 'бергамот', 'горные травы'];
-  var state = { tried: 'all', next: 'all', q: '', country: null };
+  // Точка у фильтра цвета — цвет самого вина в бокале.
+  var WINE_COLOR = { 'белое': '#f1e7a4', 'оранжевое': '#e9a95c', 'красное': '#7d1f2c', 'розовое': '#f2b8c0' };
+  var TYPE_COLOR = { 'вино': '#c9d8b0', 'игристое': '#f4ecc2', 'виски': '#c68a3e' };
+  var state = { tried: 'all', next: 'all', q: '', country: null, color: null, type: null };
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
@@ -24,6 +28,14 @@
   }
   function country(w) { var c = w.region.split(',')[0].trim(); return c === 'Южная Африка' ? 'ЮАР' : c; }
   function tint(w) { return COUNTRY[country(w)] || '#e8e5d4'; }
+  function type(w) { return w.type || 'вино'; }
+  function color(w) { return type(w) === 'виски' ? null : w.color || (/оранж/.test(w.sugar) ? 'оранжевое' : 'белое'); }
+  // «белое сухое», «игристое брют», «виски, купажированный»; у оранжевых цвет уже в поле сахара.
+  function kind(w) {
+    if (type(w) === 'виски') return 'виски, ' + w.sugar;
+    if (type(w) === 'игристое') return 'игристое ' + w.sugar;
+    return /оранж/.test(w.sugar) ? w.sugar : color(w) + ' ' + w.sugar;
+  }
   function rub(n) { return n.toLocaleString('ru-RU') + ' ₽'; }
   function dots(n) {
     var h = '';
@@ -33,7 +45,7 @@
   // Профиль вкуса по шкалам SimpleWine (1–5).
   function profile(sw) {
     if (!sw || !sw.scales) return '';
-    var keys = ['Сладость', 'Кислотность', 'Ароматичность', 'Тело'].filter(function (k) { return sw.scales[k]; });
+    var keys = ['Сладость', 'Кислотность', 'Ароматичность', 'Танины', 'Тело'].filter(function (k) { return sw.scales[k]; });
     if (!keys.length) return '';
     return '<div class="prof"><span class="who">Профиль вкуса</span>' + keys.map(function (k) {
       var n = sw.scales[k], seg = '';
@@ -68,17 +80,24 @@
   var line = AROMAS.map(function (a) { return '<span>' + a + '</span>'; }).join('');
   document.getElementById('ticker').innerHTML = line + line;
 
-  // ---- страны ----
-  var cc = {};
-  W.forEach(function (w) { var c = country(w); cc[c] = (cc[c] || 0) + 1; });
+  // ---- фильтры: цвет вина и страна (цвет подложки) ----
+  function tally(fn) { var o = {}; W.forEach(function (w) { var k = fn(w); if (k) o[k] = (o[k] || 0) + 1; }); return o; }
+  function chips(kind, counts, swatch) {
+    return Object.keys(counts).sort(function (a, b) { return counts[b] - counts[a]; }).map(function (c) {
+      return '<button type="button" data-k="' + kind + '" data-c="' + esc(c) + '" aria-pressed="false" style="--c:' + swatch(c) + '"><i></i>' +
+        esc(c.charAt(0).toUpperCase() + c.slice(1)) + ' <small>' + counts[c] + '</small></button>';
+    }).join('');
+  }
   var cbox = document.getElementById('countries');
-  cbox.innerHTML = Object.keys(cc).sort(function (a, b) { return cc[b] - cc[a]; }).map(function (c) {
-    return '<button type="button" data-c="' + esc(c) + '" aria-pressed="false" style="--c:' + (COUNTRY[c] || '#e8e5d4') + '"><i></i>' + esc(c) + ' <small>' + cc[c] + '</small></button>';
-  }).join('');
+  cbox.innerHTML =
+    '<span class="filter-label">Тип</span>' + chips('type', tally(type), function (c) { return TYPE_COLOR[c] || '#eee'; }) +
+    '<span class="filter-label">Цвет</span>' + chips('color', tally(color), function (c) { return WINE_COLOR[c] || '#eee'; }) +
+    '<span class="filter-label">Страна</span>' + chips('country', tally(country), function (c) { return COUNTRY[c] || '#e8e5d4'; });
   cbox.addEventListener('click', function (e) {
     var b = e.target.closest('button'); if (!b) return;
-    state.country = state.country === b.dataset.c ? null : b.dataset.c;
-    cbox.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.c === state.country)); });
+    var k = b.dataset.k;
+    state[k] = state[k] === b.dataset.c ? null : b.dataset.c;
+    cbox.querySelectorAll('button[data-k="' + k + '"]').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.c === state[k])); });
     render();
   });
 
@@ -87,13 +106,14 @@
     var tried = TRIED.indexOf(w.status) >= 0, s = STAMP[w.status];
     var tag = w.tag ? '<span class="card__tag' + (w.tag === 'Рискованно' ? ' card__tag--risk' : '') + '">' + esc(w.tag) + '</span>' : '';
     var foot = tried
-      ? '<span class="sugar">' + esc(w.sugar) + '</span><span class="go">SimpleWine ↗</span>'
+      ? '<span class="sugar">' + esc(kind(w)) + '</span><span class="go">SimpleWine ↗</span>'
       : '<span class="price">' + rub(w.price) + '</span>' + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
     return '<button type="button" class="card card--' + w.status + '" data-open="' + w.id + '">' +
       '<span class="card__plate" style="--c:' + tint(w) + '">' +
         '<span class="stamp stamp--' + w.status + '"><span><b>' + s[0] + '</b>' + s[1] + '</span></span>' +
         '<img class="card__bottle" src="' + w.img.bottle + '" alt="" loading="lazy">' +
-        (w.img.glass ? '<img class="card__glass" src="' + w.img.glass + '" alt="" loading="lazy"><span class="peek">что в бокале</span>' : '') +
+        (w.img.glass ? '<img class="card__glass" src="' + w.img.glass + '" alt="" loading="lazy"><span class="peek">что в бокале</span>'
+          : w.img.mood ? '<img class="card__glass card__glass--photo" src="' + w.img.mood + '" alt="" loading="lazy"><span class="peek">фото</span>' : '') +
       '</span>' +
       '<span class="card__body">' +
         '<span class="card__producer">' + esc(w.producer) + '</span>' +
@@ -108,6 +128,8 @@
 
   function ok(w) {
     if (state.country && country(w) !== state.country) return false;
+    if (state.color && color(w) !== state.color) return false;
+    if (state.type && type(w) !== state.type) return false;
     if (!state.q) return true;
     return [w.name, w.producer, w.region, w.grape, w.note, w.sugar].join(' ').toLowerCase().indexOf(state.q) >= 0;
   }
@@ -159,15 +181,16 @@
     back = document.activeElement;
     var v = [['Бутылка', w.img.bottle, false]];
     if (w.img.glass) v.push(['В бокале', w.img.glass, true]);
+    if (w.img.mood) v.push(['Фото', w.img.mood, false, true]);
     if (w.img.label) v.push(['Этикетка', w.img.label, false]);
     media.style.setProperty('--c', tint(w));
     views.innerHTML = v.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + x[0] + '</button>'; }).join('');
     function show(i) {
-      main.src = v[i][1]; mainBox.classList.toggle('is-white', v[i][2]);
+      main.src = v[i][1]; mainBox.classList.toggle('is-white', v[i][2]); mainBox.classList.toggle('is-photo', !!v[i][3]);
       views.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.i === i)); });
     }
     views.onclick = function (e) { var b = e.target.closest('button'); if (b) show(+b.dataset.i); };
-    show(w.img.glass ? 1 : 0);
+    show(w.img.glass || w.img.mood ? 1 : 0);
     main.alt = w.name;
 
     var tried = TRIED.indexOf(w.status) >= 0;
@@ -182,7 +205,7 @@
       crowd(w.sw) +
       '<dl class="facts">' +
         '<dt>Регион</dt><dd>' + esc(w.region) + '</dd>' +
-        '<dt>Сахар</dt><dd>' + esc(w.sugar) + '</dd>' +
+        '<dt>Тип</dt><dd>' + esc(kind(w)) + '</dd>' +
         (w.grape ? '<dt>Виноград</dt><dd>' + esc(w.grape) + '</dd>' : '') +
         (w.sw && w.sw.serve ? '<dt>Подавать</dt><dd>' + esc(w.sw.serve) + '</dd>' : '') +
         (w.sw && w.sw.food ? '<dt>К столу</dt><dd>' + esc(w.sw.food) + '</dd>' : '') +
