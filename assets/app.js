@@ -104,10 +104,10 @@
   // ---- карточки ----
   function card(w) {
     var tried = TRIED.indexOf(w.status) >= 0, s = STAMP[w.status];
-    var tag = w.tag ? '<span class="card__tag' + (w.tag === 'Рискованно' ? ' card__tag--risk' : '') + '">' + esc(w.tag) + '</span>' : '';
+    var tag = w.tag ? '<span class="card__tag' + (w.tag === 'Рискованно' ? ' card__tag--risk' : w.offsite ? ' card__tag--off' : '') + '">' + esc(w.tag) + '</span>' : '';
     var foot = tried
       ? '<span class="sugar">' + esc(kind(w)) + '</span><span class="go">SimpleWine ↗</span>'
-      : '<span class="price">' + rub(w.price) + '</span>' + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
+      : (w.price ? '<span class="price">' + rub(w.price) + '</span>' : '<span class="offsite">нет в SimpleWine · ' + esc(w.shop) + '</span>') + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
     return '<button type="button" class="card card--' + w.status + '" data-open="' + w.id + '">' +
       '<span class="card__plate" style="--c:' + tint(w) + '">' +
         '<span class="stamp stamp--' + w.status + '"><span><b>' + s[0] + '</b>' + s[1] + '</span></span>' +
@@ -148,7 +148,8 @@
     document.getElementById('wall-' + id).innerHTML = h;
     document.getElementById('none-' + id).hidden = n > 0;
   }
-  function byPrice(a, b) { return a.price - b.price; }
+  // Позиции не из SimpleWine (без цены) — в конце списка.
+  function byPrice(a, b) { return (a.price || 1e9) - (b.price || 1e9); }
   function render() {
     fill('tried', [['ok', 'Отлично'], ['mid', 'Обычно'], ['bad', 'Не зашло']], state.tried);
     fill('next', [['ord', 'Заказано', byPrice], ['next', 'Ещё не пробовали', byPrice]], state.next);
@@ -200,7 +201,7 @@
       '<div><div class="card__producer">' + esc(w.producer) + '</div><h2 id="sheetName">' + esc(w.name) + '</h2></div>' +
       '<p class="sheet__note"><span class="who">' + (tried ? 'Наш комментарий' : 'Почему стоит взять') + '</span>«' + esc(w.note) + '»</p>' +
       profile(w.sw) +
-      (w.sw && w.sw.tasting ? '<div class="sw"><span class="who">Как описывает SimpleWine</span><p>' + esc(w.sw.tasting) + '</p></div>' : '') +
+      (w.sw && w.sw.tasting ? '<div class="sw"><span class="who">' + (w.shop ? 'Описание · ' + esc(w.shop) : 'Как описывает SimpleWine') + '</span><p>' + esc(w.sw.tasting) + '</p></div>' : '') +
       (w.sw && w.sw.expert ? '<blockquote class="expert"><p>«' + esc(w.sw.expert.text) + '»</p><footer>' + esc(w.sw.expert.name) + ', ' + esc(w.sw.expert.role.toLowerCase()) + '</footer></blockquote>' : '') +
       crowd(w.sw) +
       '<dl class="facts">' +
@@ -212,7 +213,8 @@
         (!tried && w.price ? '<dt>Цена</dt><dd>' + rub(w.price) + ' <span style="color:var(--ink-3);font-weight:500">на 23.10</span></dd>' : '') +
       '</dl>' +
       (w.sw && w.sw.fact ? '<details class="fact"><summary>Это интересно</summary><p>' + esc(w.sw.fact) + '</p></details>' : '') +
-      '<a class="btn" href="' + w.url + '" target="_blank" rel="noopener">Открыть в SimpleWine ↗</a>';
+      '<a class="btn" href="' + w.url + '" target="_blank" rel="noopener">' + (w.shop ? 'Открыть в ' + esc(w.shop) : 'Открыть в SimpleWine') + ' ↗</a>' +
+      (w.offsite ? '<p class="offsite-note">Этого нет в ассортименте SimpleWine. Ссылка ведёт в зарубежный магазин: там фото и описание, в России позицию придётся поискать.</p>' : '');
     sheet.hidden = false;
     document.body.style.overflow = 'hidden';
     sheet.querySelector('.sheet__x').focus();

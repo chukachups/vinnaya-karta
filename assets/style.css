@@ -157,9 +157,12 @@ button { font: inherit; color: inherit; }
 .card__meta { font-size: 13px; color: var(--ink-2); }
 .card__note { margin-top: 6px; font: 500 italic 21px/1.25 var(--f-note); color: var(--ink); }
 .card__tag { align-self: flex-start; margin-top: 4px; padding: 3px 10px; border-radius: 999px; background: var(--straw); font-size: 12px; font-weight: 700; }
+.card__tag--off { background: var(--bottle); color: var(--straw); }
 .card__tag--risk { background: #f3d7cc; color: var(--bad); }
 .card__foot { margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .price { font: 800 22px/1 var(--f-big); letter-spacing: -.04em; white-space: nowrap; }
+.offsite { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+.offsite-note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); }
 .dots { display: inline-flex; gap: 3px; }
 .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--rule); }
 .dots i.on { background: var(--bottle); }

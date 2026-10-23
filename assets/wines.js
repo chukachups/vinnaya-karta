@@ -2276,5 +2276,131 @@ window.WINES = [
   "price": 9990,
   "grape": "шардоне 75%, пино неро 22,5%, пино бьянко 2,5%",
   "aroma": 3
+ },
+ {
+  "id": "x-glenmorangie",
+  "type": "виски",
+  "name": "Glenmorangie The Original 10",
+  "producer": "Glenmorangie",
+  "region": "Шотландия, Хайленд",
+  "sugar": "односолодовый",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "The Whisky Exchange",
+  "note": "Мягкий и фруктовый, без дыма: персик, цитрус, ваниль, мёд. Классика для тех, кому нравится Hibiki",
+  "url": "https://www.thewhiskyexchange.com/p/7088/glenmorangie-10-year-old-original",
+  "img": {
+   "bottle": "img/x-glenmorangie-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Аромат: лимонный шербет, абрикос, мёд, ваниль. Вкус: мёд, солод, сладкие специи, кремовая текстура. Послевкусие мягкое и фруктовое. 10 лет в бочках из американского дуба, 40%."
+  },
+  "offsite": true
+ },
+ {
+  "id": "x-balvenie",
+  "type": "виски",
+  "name": "Balvenie DoubleWood 12",
+  "producer": "The Balvenie",
+  "region": "Шотландия, Спейсайд",
+  "sugar": "односолодовый",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "The Whisky Exchange",
+  "note": "Мёд, ваниль, орехи и хересная нотка: тот же сухофруктовый профиль, что у Hibiki",
+  "url": "https://www.thewhiskyexchange.com/p/284/balvenie-12-year-old-doublewood",
+  "img": {
+   "bottle": "img/x-balvenie-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Печёные фрукты, медовые злаки, ваниль и поджаренные орехи, тёплая корица. 12 лет в бурбонных бочках и ещё 9 месяцев в бочках из-под хереса олоросо, 40%."
+  },
+  "offsite": true
+ },
+ {
+  "id": "x-monkey",
+  "type": "виски",
+  "name": "Monkey Shoulder",
+  "producer": "William Grant & Sons",
+  "region": "Шотландия, Спейсайд",
+  "sugar": "купажированный солодовый",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "The Whisky Exchange",
+  "note": "Сладкий, мягкий и простой: ваниль, мёд, апельсин. Хорош и чистым, и в хайболе",
+  "url": "https://www.thewhiskyexchange.com/p/5016/monkey-shoulder",
+  "img": {
+   "bottle": "img/x-monkey-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Купаж трёх односолодовых виски Спейсайда: Balvenie, Glenfiddich и Kininvie. Мягкий, сладкий, очень лёгкий в питье, 40%."
+  },
+  "offsite": true
+ },
+ {
+  "id": "x-cloudybay",
+  "type": "вино",
+  "color": "белое",
+  "name": "Cloudy Bay Sauvignon Blanc",
+  "producer": "Cloudy Bay",
+  "region": "Новая Зеландия, Мальборо",
+  "sugar": "сухое",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "Vivino",
+  "grape": "совиньон блан",
+  "note": "Эталон новозеландского совиньона. Как Garuma, только ярче: маракуйя, ананас, томатный лист",
+  "url": "https://www.vivino.com/en/cloudy-bay-sauvignon-blanc/w/18978",
+  "img": {
+   "bottle": "img/x-cloudybay-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Тропические ароматы маракуйи и ананаса, травянистые ноты базилика и томатного листа. Свежее, сочное, с минеральным финишем. Wine Spectator 93, Vivino 4,2."
+  },
+  "offsite": true
+ },
+ {
+  "id": "x-nussbaumer",
+  "type": "вино",
+  "color": "белое",
+  "name": "Nussbaumer Gewürztraminer",
+  "producer": "Cantina Tramin",
+  "region": "Италия, Альто-Адидже",
+  "sugar": "сухое",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "Callmewine",
+  "grape": "гевюрцтраминер 100%",
+  "note": "Лучший гевюрцтраминер Альто-Адидже, больше 20 лет подряд «Tre Bicchieri». Следующий уровень после Terlan",
+  "url": "https://callmewine.com/en/gewurztraminer-nussbaumer-tramin-2022-P51594.htm",
+  "img": {
+   "bottle": "img/x-nussbaumer-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Глубокий золотой цвет. Аромат: свежие цветы, абрикос, личи, гуава. Во вкусе сочность и солёная минеральность, раскрывается с годами."
+  },
+  "offsite": true
+ },
+ {
+  "id": "x-hugel",
+  "type": "вино",
+  "color": "белое",
+  "name": "Gewurztraminer Classic",
+  "producer": "Hugel",
+  "region": "Франция, Эльзас",
+  "sugar": "сухое",
+  "status": "next",
+  "tag": "Не в SimpleWine",
+  "shop": "Callmewine",
+  "grape": "гевюрцтраминер 100%",
+  "note": "Эльзасская классика: роза, личи, манго и имбирь. Сравнить с итальянскими гевюрцами",
+  "url": "https://us.callmewine.com/gewurztraminer-classic-hugel-2023-P59116.htm",
+  "img": {
+   "bottle": "img/x-hugel-bottle.webp"
+  },
+  "sw": {
+   "tasting": "Цветочный аромат с яркими пряными нотами, во вкусе манго и имбирь. Виноград с холмов вокруг Риквира, флагман семьи Хюгель."
+  },
+  "offsite": true
  }
 ];
