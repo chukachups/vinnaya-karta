@@ -30,6 +30,25 @@
     for (var i = 0; i < 5; i++) h += '<i' + (i < n ? ' class="on"' : '') + '></i>';
     return '<span class="dots" aria-label="Ароматичность ' + n + ' из 5">' + h + '</span>';
   }
+  // Профиль вкуса по шкалам SimpleWine (1–5).
+  function profile(sw) {
+    if (!sw || !sw.scales) return '';
+    var keys = ['Сладость', 'Кислотность', 'Ароматичность', 'Тело'].filter(function (k) { return sw.scales[k]; });
+    if (!keys.length) return '';
+    return '<div class="prof"><span class="who">Профиль вкуса</span>' + keys.map(function (k) {
+      var n = sw.scales[k], seg = '';
+      for (var i = 1; i <= 5; i++) seg += '<i' + (i <= n ? ' class="on"' : '') + '></i>';
+      return '<div class="prof__row"><span>' + k + '</span><span class="prof__bar" aria-label="' + n + ' из 5">' + seg + '</span><b>' + n + '</b></div>';
+    }).join('') + '</div>';
+  }
+  // Что пишут покупатели: средняя оценка и частые слова из отзывов.
+  function crowd(sw) {
+    if (!sw || !sw.rating) return '';
+    return '<div class="crowd"><span class="crowd__avg">★ ' + String(sw.rating.avg).replace('.', ',') + '</span>' +
+      '<span class="crowd__n">' + sw.rating.n.toLocaleString('ru-RU') + ' оценок в SimpleWine</span>' +
+      (sw.tags && sw.tags.length ? '<span class="crowd__tags">' + sw.tags.map(function (t) { return '<span>' + esc(t.toLowerCase()) + '</span>'; }).join('') + '</span>' : '') +
+    '</div>';
+  }
   function byId(id) { for (var i = 0; i < W.length; i++) if (W[i].id === id) return W[i]; }
 
   // ---- счётчики ----
@@ -156,14 +175,20 @@
     info.innerHTML =
       '<span class="chip" style="color:' + col + '">' + STAMP[w.status][0] + ' ' + LABEL[w.status] + '</span>' +
       '<div><div class="card__producer">' + esc(w.producer) + '</div><h2 id="sheetName">' + esc(w.name) + '</h2></div>' +
-      '<p class="sheet__note">«' + esc(w.note) + '»</p>' +
+      '<p class="sheet__note"><span class="who">' + (tried ? 'Наш комментарий' : 'Почему стоит взять') + '</span>«' + esc(w.note) + '»</p>' +
+      profile(w.sw) +
+      (w.sw && w.sw.tasting ? '<div class="sw"><span class="who">Как описывает SimpleWine</span><p>' + esc(w.sw.tasting) + '</p></div>' : '') +
+      (w.sw && w.sw.expert ? '<blockquote class="expert"><p>«' + esc(w.sw.expert.text) + '»</p><footer>' + esc(w.sw.expert.name) + ', ' + esc(w.sw.expert.role.toLowerCase()) + '</footer></blockquote>' : '') +
+      crowd(w.sw) +
       '<dl class="facts">' +
         '<dt>Регион</dt><dd>' + esc(w.region) + '</dd>' +
         '<dt>Сахар</dt><dd>' + esc(w.sugar) + '</dd>' +
         (w.grape ? '<dt>Виноград</dt><dd>' + esc(w.grape) + '</dd>' : '') +
-        (w.aroma ? '<dt>Аромат</dt><dd>' + dots(w.aroma) + '&nbsp; ' + w.aroma + ' из 5</dd>' : '') +
+        (w.sw && w.sw.serve ? '<dt>Подавать</dt><dd>' + esc(w.sw.serve) + '</dd>' : '') +
+        (w.sw && w.sw.food ? '<dt>К столу</dt><dd>' + esc(w.sw.food) + '</dd>' : '') +
         (!tried && w.price ? '<dt>Цена</dt><dd>' + rub(w.price) + ' <span style="color:var(--ink-3);font-weight:500">на 23.10</span></dd>' : '') +
       '</dl>' +
+      (w.sw && w.sw.fact ? '<details class="fact"><summary>Это интересно</summary><p>' + esc(w.sw.fact) + '</p></details>' : '') +
       '<a class="btn" href="' + w.url + '" target="_blank" rel="noopener">Открыть в SimpleWine ↗</a>';
     sheet.hidden = false;
     document.body.style.overflow = 'hidden';
