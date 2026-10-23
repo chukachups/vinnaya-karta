@@ -53,6 +53,23 @@
   <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
 
   <nav class="cats" aria-label="Категории"><div class="cats__in" id="cats" role="group"></div></nav>
+  <div class="tools">
+    <button type="button" class="tools__country" id="countryToggle" aria-expanded="false" aria-controls="countries">Страна<span id="countryNow"></span><i aria-hidden="true">▾</i></button>
+    <label class="tools__sort"><span>Порядок</span>
+      <select id="sort">
+        <option value="mark">по оценке</option>
+        <option value="cheap">сначала дешевле</option>
+        <option value="dear">сначала дороже</option>
+        <option value="crowd">по рейтингу SimpleWine</option>
+      </select>
+    </label>
+    <div class="tools__price" id="price" role="group" aria-label="Цена">
+      <button type="button" data-p="0" aria-pressed="true">Любая<span> цена</span></button>
+      <button type="button" data-p="2000" aria-pressed="false">до 2&nbsp;000&nbsp;₽</button>
+      <button type="button" data-p="3000" aria-pressed="false">до 3&nbsp;000&nbsp;₽</button>
+      <button type="button" data-p="5000" aria-pressed="false">до 5&nbsp;000&nbsp;₽</button>
+    </div>
+  </div>
   <div class="countries" id="countries" role="group" aria-label="Фильтр по стране"></div>
 
   <section class="sect" id="tried" aria-labelledby="h-tried">
@@ -78,6 +95,7 @@
         <button type="button" data-f="next" aria-pressed="false">Ещё не пробовали</button>
       </div>
     </header>
+    <div class="await" id="await"></div>
     <p class="sect__note">Сначала заказанные, дальше по цене. Ароматичность из карточки SimpleWine, от 1 до 5.</p>
     <div class="wall" id="wall-next"></div>
     <p class="none" id="none-next" hidden>Ничего не нашлось. Попробуйте другой запрос или страну.</p>
@@ -101,7 +119,7 @@
 
   <footer class="end">
     <p class="end__mark">Винная карта</p>
-    <p>Фото, «вкусоароматика» и цены взяты с simplewine.ru 23&nbsp;октября 2026. Цены и наличие могут меняться.</p>
+    <p>Фото, «вкусоароматика» и цены взяты с simplewine.ru 23&nbsp;октября 2026. Шкалы вкуса у виски составлены по описанию. Цены и наличие могут меняться.</p>
   </footer>
 </main>
 
@@ -109,6 +127,11 @@
   <div class="sheet__scrim" data-close></div>
   <article class="sheet__card" role="dialog" aria-modal="true" aria-labelledby="sheetName">
     <button class="sheet__x" type="button" data-close aria-label="Закрыть">×</button>
+    <div class="sheet__nav">
+      <button type="button" id="sheetPrev" aria-label="Предыдущее вино">‹</button>
+      <span id="sheetPos"></span>
+      <button type="button" id="sheetNext" aria-label="Следующее вино">›</button>
+    </div>
     <div class="sheet__media" id="sheetMedia">
       <div class="sheet__main"><img id="sheetImg" alt=""></div>
       <div class="sheet__views" id="sheetViews"></div>
