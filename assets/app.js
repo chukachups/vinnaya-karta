@@ -1,20 +1,34 @@
 (function () {
   'use strict';
   var W = window.WINES || [];
-  var LABEL = { ok: 'Отлично', mid: 'Обычно', bad: 'Не зашло', ord: 'Заказано', next: 'Попробовать' };
   var TRIED = ['ok', 'mid', 'bad'];
-  var state = { tried: 'all', next: 'all', q: '' };
+  var STAMP = {
+    ok: ['★', 'Отлично'], mid: ['◐', 'Обычно'], bad: ['✕', 'Не зашло'],
+    ord: ['✓', 'Заказано'], next: ['→', 'Попро&shy;бовать']
+  };
+  var LABEL = { ok: 'Отлично', mid: 'Обычно', bad: 'Не зашло', ord: 'Заказано', next: 'Попробовать' };
+  // Цвет подложки = страна вина.
+  var COUNTRY = {
+    'Италия': '#d9e3c8', 'Россия': '#ecd6c6', 'Чили': '#cadcea', 'Франция': '#dcd5ea',
+    'Грузия': '#f0d5b4', 'Австрия': '#cfe7d8', 'ЮАР': '#e8e0bd', 'Аргентина': '#c6dff0',
+    'Новая Зеландия': '#c4e4de', 'Португалия': '#ecd0d9'
+  };
+  var AROMAS = ['персик', 'грейпфрут', 'крыжовник', 'маракуйя', 'белые цветы', 'смородиновый лист', 'абрикос', 'мандарин',
+    'чайная роза', 'личи', 'груша', 'жасмин', 'мускат', 'зелёное яблоко', 'дыня', 'лайм', 'бергамот', 'горные травы'];
+  var state = { tried: 'all', next: 'all', q: '', country: null };
 
   function esc(s) {
     return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
     });
   }
-  function rub(n) { return n.toLocaleString('ru-RU') + ' ₽'; }
+  function country(w) { var c = w.region.split(',')[0].trim(); return c === 'Южная Африка' ? 'ЮАР' : c; }
+  function tint(w) { return COUNTRY[country(w)] || '#e8e5d4'; }
+  function rub(n) { return n.toLocaleString('ru-RU') + ' ₽'; }
   function dots(n) {
     var h = '';
     for (var i = 0; i < 5; i++) h += '<i' + (i < n ? ' class="on"' : '') + '></i>';
-    return '<span class="aroma" aria-label="Ароматичность ' + n + ' из 5">' + h + '</span>';
+    return '<span class="dots" aria-label="Ароматичность ' + n + ' из 5">' + h + '</span>';
   }
   function byId(id) { for (var i = 0; i < W.length; i++) if (W[i].id === id) return W[i]; }
 
@@ -22,82 +36,88 @@
   var counts = { tried: 0, plan: 0 };
   W.forEach(function (w) {
     counts[w.status] = (counts[w.status] || 0) + 1;
-    if (TRIED.indexOf(w.status) >= 0) counts.tried++; else counts.plan++;
+    counts[TRIED.indexOf(w.status) >= 0 ? 'tried' : 'plan']++;
   });
   document.querySelectorAll('[data-count]').forEach(function (el) { el.textContent = counts[el.dataset.count] || 0; });
 
-  // ---- полка любимцев ----
-  var fav = ['t01', 't08', 't09'].map(byId).filter(Boolean);
-  document.getElementById('shelf').innerHTML = fav.map(function (w) {
-    return '<img src="' + w.img.bottle + '" alt="' + esc(w.name) + '">';
+  // ---- плакат: три любимца ----
+  document.getElementById('heroBottles').innerHTML = ['t01', 't08', 't09'].map(byId).filter(Boolean).map(function (w) {
+    return '<button type="button" data-open="' + w.id + '" aria-label="' + esc(w.name) + '"><img src="' + w.img.bottle + '" alt=""></button>';
   }).join('');
-  document.getElementById('shelfNames').textContent = fav.map(function (w) { return w.name.replace(/ \d{4}$/, ''); }).join(', ');
+
+  // ---- лента ароматов ----
+  var line = AROMAS.map(function (a) { return '<span>' + a + '</span>'; }).join('');
+  document.getElementById('ticker').innerHTML = line + line;
+
+  // ---- страны ----
+  var cc = {};
+  W.forEach(function (w) { var c = country(w); cc[c] = (cc[c] || 0) + 1; });
+  var cbox = document.getElementById('countries');
+  cbox.innerHTML = Object.keys(cc).sort(function (a, b) { return cc[b] - cc[a]; }).map(function (c) {
+    return '<button type="button" data-c="' + esc(c) + '" aria-pressed="false" style="--c:' + (COUNTRY[c] || '#e8e5d4') + '"><i></i>' + esc(c) + ' <small>' + cc[c] + '</small></button>';
+  }).join('');
+  cbox.addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return;
+    state.country = state.country === b.dataset.c ? null : b.dataset.c;
+    cbox.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x.dataset.c === state.country)); });
+    render();
+  });
 
   // ---- карточки ----
   function card(w) {
-    var tried = TRIED.indexOf(w.status) >= 0;
-    var tag = '';
-    if (w.tag) tag = '<span class="tag' + (w.tag === 'Рискованно' ? ' tag--risk' : '') + '">' + esc(w.tag) + '</span>';
+    var tried = TRIED.indexOf(w.status) >= 0, s = STAMP[w.status];
+    var tag = w.tag ? '<span class="card__tag' + (w.tag === 'Рискованно' ? ' card__tag--risk' : '') + '">' + esc(w.tag) + '</span>' : '';
     var foot = tried
-      ? '<span class="card__meta">' + esc(w.sugar) + '</span><span class="aroma-l">SimpleWine ↗</span>'
-      : '<span class="price">' + rub(w.price) + '</span>' + (w.aroma ? '<span class="aroma-l">аромат ' + dots(w.aroma) + '</span>' : '');
-    return '<button type="button" class="card card--' + w.status + '" data-id="' + w.id + '" data-s="' + w.status + '">' +
-      '<span class="card__plate">' +
-        '<span class="badge badge--' + w.status + '">' + LABEL[w.status] + '</span>' +
+      ? '<span class="sugar">' + esc(w.sugar) + '</span><span class="go">SimpleWine ↗</span>'
+      : '<span class="price">' + rub(w.price) + '</span>' + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
+    return '<button type="button" class="card card--' + w.status + '" data-open="' + w.id + '">' +
+      '<span class="card__plate" style="--c:' + tint(w) + '">' +
+        '<span class="stamp stamp--' + w.status + '"><span><b>' + s[0] + '</b>' + s[1] + '</span></span>' +
         '<img class="card__bottle" src="' + w.img.bottle + '" alt="" loading="lazy">' +
-        (w.img.glass ? '<img class="card__glass" src="' + w.img.glass + '" alt="" loading="lazy"><span class="glass-hint">что в бокале</span>' : '') +
+        (w.img.glass ? '<img class="card__glass" src="' + w.img.glass + '" alt="" loading="lazy"><span class="peek">что в бокале</span>' : '') +
       '</span>' +
       '<span class="card__body">' +
         '<span class="card__producer">' + esc(w.producer) + '</span>' +
         '<span class="card__name">' + esc(w.name) + '</span>' +
         '<span class="card__meta">' + esc(w.region) + (w.grape ? ' · ' + esc(w.grape) : '') + '</span>' +
         tag +
-        '<span class="card__note">' + esc(w.note) + '</span>' +
+        '<span class="card__note">«' + esc(w.note) + '»</span>' +
         '<span class="card__foot">' + foot + '</span>' +
       '</span>' +
     '</button>';
   }
 
-  function matches(w) {
+  function ok(w) {
+    if (state.country && country(w) !== state.country) return false;
     if (!state.q) return true;
-    var hay = [w.name, w.producer, w.region, w.grape, w.note, w.sugar].join(' ').toLowerCase();
-    return hay.indexOf(state.q) >= 0;
+    return [w.name, w.producer, w.region, w.grape, w.note, w.sugar].join(' ').toLowerCase().indexOf(state.q) >= 0;
   }
 
-  function render() {
-    // попробовали: группы по оценке
+  function fill(id, groups, filter) {
     var h = '', n = 0;
-    TRIED.forEach(function (s) {
-      if (state.tried !== 'all' && state.tried !== s) return;
-      var list = W.filter(function (w) { return w.status === s && matches(w); });
+    groups.forEach(function (g) {
+      if (filter !== 'all' && filter !== g[0]) return;
+      var list = W.filter(function (w) { return w.status === g[0] && ok(w); });
+      if (g[2]) list.sort(g[2]);
       if (!list.length) return;
       n += list.length;
-      if (state.tried === 'all') h += '<h3 class="group-title">' + LABEL[s] + ' · ' + list.length + '</h3>';
+      if (filter === 'all') h += '<h3 class="wall__group">' + g[1] + ' <em>' + list.length + '</em></h3>';
       h += list.map(card).join('');
     });
-    document.getElementById('grid-tried').innerHTML = h;
-    document.getElementById('none-tried').hidden = n > 0;
-
-    // дальше: заказано, потом остальное, внутри по цене
-    h = ''; n = 0;
-    [['ord', 'Заказано'], ['next', 'Ещё не пробовали']].forEach(function (g) {
-      if (state.next !== 'all' && state.next !== g[0]) return;
-      var list = W.filter(function (w) { return w.status === g[0] && matches(w); })
-        .sort(function (a, b) { return a.price - b.price; });
-      if (!list.length) return;
-      n += list.length;
-      if (state.next === 'all') h += '<h3 class="group-title">' + g[1] + ' · ' + list.length + '</h3>';
-      h += list.map(card).join('');
-    });
-    document.getElementById('grid-next').innerHTML = h;
-    document.getElementById('none-next').hidden = n > 0;
+    document.getElementById('wall-' + id).innerHTML = h;
+    document.getElementById('none-' + id).hidden = n > 0;
+  }
+  function byPrice(a, b) { return a.price - b.price; }
+  function render() {
+    fill('tried', [['ok', 'Отлично'], ['mid', 'Обычно'], ['bad', 'Не зашло']], state.tried);
+    fill('next', [['ord', 'Заказано', byPrice], ['next', 'Ещё не пробовали', byPrice]], state.next);
   }
 
-  document.querySelectorAll('.seg').forEach(function (seg) {
-    seg.addEventListener('click', function (e) {
+  document.querySelectorAll('.pills').forEach(function (box) {
+    box.addEventListener('click', function (e) {
       var b = e.target.closest('button'); if (!b) return;
-      state[seg.dataset.for] = b.dataset.f;
-      seg.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      state[box.dataset.for] = b.dataset.f;
+      box.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
       render();
     });
   });
@@ -106,43 +126,43 @@
     render();
   });
 
-  // ---- окно вина ----
-  var sheet = document.getElementById('sheet'), main = document.getElementById('sheetImg');
-  var mainBox = main.parentElement, thumbs = document.getElementById('sheetThumbs'), info = document.getElementById('sheetInfo');
-  var lastFocus = null;
+  // ---- тень у панели при прокрутке ----
+  var bar = document.querySelector('.bar');
+  window.addEventListener('scroll', function () { bar.classList.toggle('is-stuck', window.scrollY > 8); }, { passive: true });
 
-  function pick(src, white, btn) {
-    main.src = src; mainBox.classList.toggle('is-white', white);
-    thumbs.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === btn)); });
-  }
+  // ---- окно вина ----
+  var sheet = document.getElementById('sheet'), media = document.getElementById('sheetMedia');
+  var main = document.getElementById('sheetImg'), mainBox = main.parentElement;
+  var views = document.getElementById('sheetViews'), info = document.getElementById('sheetInfo');
+  var back = null;
 
   function open(w) {
-    lastFocus = document.activeElement;
-    var views = [['Бутылка', w.img.bottle, false]];
-    if (w.img.glass) views.push(['В бокале', w.img.glass, true]);
-    if (w.img.label) views.push(['Этикетка', w.img.label, false]);
-    thumbs.innerHTML = views.map(function (v, i) {
-      return '<button type="button" data-i="' + i + '"><img src="' + v[1] + '" alt="">' + v[0] + '</button>';
-    }).join('');
-    thumbs.querySelectorAll('button').forEach(function (b) {
-      var v = views[+b.dataset.i];
-      b.addEventListener('click', function () { pick(v[1], v[2], b); });
-    });
-    var first = w.img.glass ? 1 : 0;
-    pick(views[first][1], views[first][2], thumbs.children[first]);
+    back = document.activeElement;
+    var v = [['Бутылка', w.img.bottle, false]];
+    if (w.img.glass) v.push(['В бокале', w.img.glass, true]);
+    if (w.img.label) v.push(['Этикетка', w.img.label, false]);
+    media.style.setProperty('--c', tint(w));
+    views.innerHTML = v.map(function (x, i) { return '<button type="button" data-i="' + i + '">' + x[0] + '</button>'; }).join('');
+    function show(i) {
+      main.src = v[i][1]; mainBox.classList.toggle('is-white', v[i][2]);
+      views.querySelectorAll('button').forEach(function (b) { b.setAttribute('aria-pressed', String(+b.dataset.i === i)); });
+    }
+    views.onclick = function (e) { var b = e.target.closest('button'); if (b) show(+b.dataset.i); };
+    show(w.img.glass ? 1 : 0);
     main.alt = w.name;
 
     var tried = TRIED.indexOf(w.status) >= 0;
+    var col = { ok: 'var(--ok)', mid: 'var(--mid)', bad: 'var(--bad)', ord: 'var(--bottle)', next: 'var(--bottle)' }[w.status];
     info.innerHTML =
-      '<span class="badge badge--' + w.status + '" style="position:static;justify-self:start">' + LABEL[w.status] + '</span>' +
+      '<span class="chip" style="color:' + col + '">' + STAMP[w.status][0] + ' ' + LABEL[w.status] + '</span>' +
       '<div><div class="card__producer">' + esc(w.producer) + '</div><h2 id="sheetName">' + esc(w.name) + '</h2></div>' +
       '<p class="sheet__note">«' + esc(w.note) + '»</p>' +
       '<dl class="facts">' +
         '<dt>Регион</dt><dd>' + esc(w.region) + '</dd>' +
         '<dt>Сахар</dt><dd>' + esc(w.sugar) + '</dd>' +
         (w.grape ? '<dt>Виноград</dt><dd>' + esc(w.grape) + '</dd>' : '') +
-        (w.aroma ? '<dt>Аромат</dt><dd>' + dots(w.aroma) + ' ' + w.aroma + ' из 5</dd>' : '') +
-        (!tried && w.price ? '<dt>Цена</dt><dd>' + rub(w.price) + ' <span style="color:var(--ink-3)">на 23.10</span></dd>' : '') +
+        (w.aroma ? '<dt>Аромат</dt><dd>' + dots(w.aroma) + '&nbsp; ' + w.aroma + ' из 5</dd>' : '') +
+        (!tried && w.price ? '<dt>Цена</dt><dd>' + rub(w.price) + ' <span style="color:var(--ink-3);font-weight:500">на 23.10</span></dd>' : '') +
       '</dl>' +
       '<a class="btn" href="' + w.url + '" target="_blank" rel="noopener">Открыть в SimpleWine ↗</a>';
     sheet.hidden = false;
@@ -152,11 +172,11 @@
   function close() {
     sheet.hidden = true;
     document.body.style.overflow = '';
-    if (lastFocus) lastFocus.focus();
+    if (back) back.focus();
   }
   document.addEventListener('click', function (e) {
-    var c = e.target.closest('.card');
-    if (c) { open(byId(c.dataset.id)); return; }
+    var t = e.target.closest('[data-open]');
+    if (t) { open(byId(t.dataset.open)); return; }
     if (e.target.closest('[data-close]')) close();
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !sheet.hidden) close(); });

@@ -15,7 +15,9 @@ window.WINES = [
    "bottle": "img/t01-bottle.webp",
    "label": "img/t01-label.webp",
    "glass": "img/t01-glass.webp"
-  }
+  },
+  "tint": "#e9dfc2",
+  "deep": "#725b1c"
  },
  {
   "id": "t02",
@@ -31,7 +33,9 @@ window.WINES = [
    "bottle": "img/t02-bottle.webp",
    "label": "img/t02-label.webp",
    "glass": "img/t02-glass.webp"
-  }
+  },
+  "tint": "#e6ddc5",
+  "deep": "#685726"
  },
  {
   "id": "t03",
@@ -47,7 +51,9 @@ window.WINES = [
    "bottle": "img/t03-bottle.webp",
    "label": "img/t03-label.webp",
    "glass": "img/t03-glass.webp"
-  }
+  },
+  "tint": "#e9ddc2",
+  "deep": "#72571c"
  },
  {
   "id": "t04",
@@ -63,7 +69,9 @@ window.WINES = [
    "bottle": "img/t04-bottle.webp",
    "label": "img/t04-label.webp",
    "glass": "img/t04-glass.webp"
-  }
+  },
+  "tint": "#e9e3c2",
+  "deep": "#72651c"
  },
  {
   "id": "t05",
@@ -79,7 +87,9 @@ window.WINES = [
    "bottle": "img/t05-bottle.webp",
    "label": "img/t05-label.webp",
    "glass": "img/t05-glass.webp"
-  }
+  },
+  "tint": "#e4d7c7",
+  "deep": "#644b2a"
  },
  {
   "id": "t06",
@@ -95,7 +105,9 @@ window.WINES = [
    "bottle": "img/t06-bottle.webp",
    "label": "img/t06-label.webp",
    "glass": "img/t06-glass.webp"
-  }
+  },
+  "tint": "#e7ddc3",
+  "deep": "#6b5623"
  },
  {
   "id": "t07",
@@ -111,7 +123,9 @@ window.WINES = [
    "bottle": "img/t07-bottle.webp",
    "label": "img/t07-label.webp",
    "glass": "img/t07-glass.webp"
-  }
+  },
+  "tint": "#e9dfc2",
+  "deep": "#725c1c"
  },
  {
   "id": "t08",
@@ -127,7 +141,9 @@ window.WINES = [
    "bottle": "img/t08-bottle.webp",
    "label": "img/t08-label.webp",
    "glass": "img/t08-glass.webp"
-  }
+  },
+  "tint": "#e9dcc2",
+  "deep": "#6f541f"
  },
  {
   "id": "t09",
@@ -142,7 +158,9 @@ window.WINES = [
   "img": {
    "bottle": "img/t09-bottle.webp",
    "label": "img/t09-label.webp"
-  }
+  },
+  "tint": "#c2d7e9",
+  "deep": "#1c4a72"
  },
  {
   "id": "t10",
@@ -158,7 +176,9 @@ window.WINES = [
    "bottle": "img/t10-bottle.webp",
    "label": "img/t10-label.webp",
    "glass": "img/t10-glass.webp"
-  }
+  },
+  "tint": "#e4cfc7",
+  "deep": "#643b2a"
  },
  {
   "id": "t11",
@@ -174,7 +194,9 @@ window.WINES = [
    "bottle": "img/t11-bottle.webp",
    "label": "img/t11-label.webp",
    "glass": "img/t11-glass.webp"
-  }
+  },
+  "tint": "#e9e1c2",
+  "deep": "#6f5f1e"
  },
  {
   "id": "t12",
@@ -190,7 +212,9 @@ window.WINES = [
    "bottle": "img/t12-bottle.webp",
    "label": "img/t12-label.webp",
    "glass": "img/t12-glass.webp"
-  }
+  },
+  "tint": "#e9d9c2",
+  "deep": "#724f1c"
  },
  {
   "id": "t13",
@@ -206,7 +230,9 @@ window.WINES = [
    "bottle": "img/t13-bottle.webp",
    "label": "img/t13-label.webp",
    "glass": "img/t13-glass.webp"
-  }
+  },
+  "tint": "#e9dec2",
+  "deep": "#70591e"
  },
  {
   "id": "t14",
@@ -222,7 +248,9 @@ window.WINES = [
    "bottle": "img/t14-bottle.webp",
    "label": "img/t14-label.webp",
    "glass": "img/t14-glass.webp"
-  }
+  },
+  "tint": "#e9dcc2",
+  "deep": "#71561d"
  },
  {
   "id": "t15",
@@ -238,7 +266,9 @@ window.WINES = [
    "bottle": "img/t15-bottle.webp",
    "label": "img/t15-label.webp",
    "glass": "img/t15-glass.webp"
-  }
+  },
+  "tint": "#e1dcca",
+  "deep": "#5e542f"
  },
  {
   "id": "t16",
@@ -254,7 +284,9 @@ window.WINES = [
    "bottle": "img/t16-bottle.webp",
    "label": "img/t16-label.webp",
    "glass": "img/t16-glass.webp"
-  }
+  },
+  "tint": "#e8d5c3",
+  "deep": "#6c4722"
  },
  {
   "id": "t17",
@@ -270,7 +302,9 @@ window.WINES = [
    "bottle": "img/t17-bottle.webp",
    "label": "img/t17-label.webp",
    "glass": "img/t17-glass.webp"
-  }
+  },
+  "tint": "#e0e9c2",
+  "deep": "#5e721c"
  },
  {
   "id": "t18",
@@ -286,7 +320,9 @@ window.WINES = [
    "bottle": "img/t18-bottle.webp",
    "label": "img/t18-label.webp",
    "glass": "img/t18-glass.webp"
-  }
+  },
+  "tint": "#e9dbc2",
+  "deep": "#70531e"
  },
  {
   "id": "t19",
@@ -302,7 +338,9 @@ window.WINES = [
    "bottle": "img/t19-bottle.webp",
    "label": "img/t19-label.webp",
    "glass": "img/t19-glass.webp"
-  }
+  },
+  "tint": "#e9d8c2",
+  "deep": "#724c1c"
  },
  {
   "id": "t20",
@@ -318,7 +356,9 @@ window.WINES = [
    "bottle": "img/t20-bottle.webp",
    "label": "img/t20-label.webp",
    "glass": "img/t20-glass.webp"
-  }
+  },
+  "tint": "#e9dcc2",
+  "deep": "#72561c"
  },
  {
   "id": "t21",
@@ -334,7 +374,9 @@ window.WINES = [
    "bottle": "img/t21-bottle.webp",
    "label": "img/t21-label.webp",
    "glass": "img/t21-glass.webp"
-  }
+  },
+  "tint": "#e7d7c4",
+  "deep": "#694a24"
  },
  {
   "id": "t22",
@@ -349,7 +391,9 @@ window.WINES = [
   "img": {
    "bottle": "img/t22-bottle.webp",
    "label": "img/t22-label.webp"
-  }
+  },
+  "tint": "#e6d4c5",
+  "deep": "#684426"
  },
  {
   "id": "t23",
@@ -365,7 +409,9 @@ window.WINES = [
    "bottle": "img/t23-bottle.webp",
    "label": "img/t23-label.webp",
    "glass": "img/t23-glass.webp"
-  }
+  },
+  "tint": "#e9d8c2",
+  "deep": "#724d1c"
  },
  {
   "id": "t24",
@@ -381,7 +427,9 @@ window.WINES = [
    "bottle": "img/t24-bottle.webp",
    "label": "img/t24-label.webp",
    "glass": "img/t24-glass.webp"
-  }
+  },
+  "tint": "#e9dec2",
+  "deep": "#725a1c"
  },
  {
   "id": "t25",
@@ -397,7 +445,9 @@ window.WINES = [
    "bottle": "img/t25-bottle.webp",
    "label": "img/t25-label.webp",
    "glass": "img/t25-glass.webp"
-  }
+  },
+  "tint": "#e8dfc3",
+  "deep": "#6c5a22"
  },
  {
   "id": "t26",
@@ -413,7 +463,9 @@ window.WINES = [
    "bottle": "img/t26-bottle.webp",
    "label": "img/t26-label.webp",
    "glass": "img/t26-glass.webp"
-  }
+  },
+  "tint": "#c2e7e9",
+  "deep": "#1c6d72"
  },
  {
   "id": "t27",
@@ -429,7 +481,9 @@ window.WINES = [
    "bottle": "img/t27-bottle.webp",
    "label": "img/t27-label.webp",
    "glass": "img/t27-glass.webp"
-  }
+  },
+  "tint": "#e9cec2",
+  "deep": "#72371c"
  },
  {
   "id": "r160429",
@@ -449,7 +503,9 @@ window.WINES = [
    "bottle": "img/r160429-bottle.webp",
    "label": "img/r160429-label.webp",
    "glass": "img/r160429-glass.webp"
-  }
+  },
+  "tint": "#cadce0",
+  "deep": "#31535d"
  },
  {
   "id": "r159552",
@@ -469,7 +525,9 @@ window.WINES = [
    "bottle": "img/r159552-bottle.webp",
    "label": "img/r159552-label.webp",
    "glass": "img/r159552-glass.webp"
-  }
+  },
+  "tint": "#dce1ca",
+  "deep": "#555d30"
  },
  {
   "id": "r157333",
@@ -489,7 +547,9 @@ window.WINES = [
    "bottle": "img/r157333-bottle.webp",
    "label": "img/r157333-label.webp",
    "glass": "img/r157333-glass.webp"
-  }
+  },
+  "tint": "#e9dcc2",
+  "deep": "#72561c"
  },
  {
   "id": "r161486",
@@ -508,7 +568,9 @@ window.WINES = [
   "img": {
    "bottle": "img/r161486-bottle.webp",
    "label": "img/r161486-label.webp"
-  }
+  },
+  "tint": "#e3dbc7",
+  "deep": "#63522b"
  },
  {
   "id": "r161399",
@@ -528,7 +590,9 @@ window.WINES = [
    "bottle": "img/r161399-bottle.webp",
    "label": "img/r161399-label.webp",
    "glass": "img/r161399-glass.webp"
-  }
+  },
+  "tint": "#e9dbc2",
+  "deep": "#71541d"
  },
  {
   "id": "r159978",
@@ -547,7 +611,9 @@ window.WINES = [
   "img": {
    "bottle": "img/r159978-bottle.webp",
    "label": "img/r159978-label.webp"
-  }
+  },
+  "tint": "#e9e1c2",
+  "deep": "#705f1e"
  },
  {
   "id": "r160497",
@@ -567,7 +633,9 @@ window.WINES = [
    "bottle": "img/r160497-bottle.webp",
    "label": "img/r160497-label.webp",
    "glass": "img/r160497-glass.webp"
-  }
+  },
+  "tint": "#e9ddc2",
+  "deep": "#72591c"
  },
  {
   "id": "r160681",
@@ -587,7 +655,9 @@ window.WINES = [
    "bottle": "img/r160681-bottle.webp",
    "label": "img/r160681-label.webp",
    "glass": "img/r160681-glass.webp"
-  }
+  },
+  "tint": "#e9d5c2",
+  "deep": "#72471c"
  },
  {
   "id": "r161232",
@@ -606,7 +676,9 @@ window.WINES = [
   "img": {
    "bottle": "img/r161232-bottle.webp",
    "label": "img/r161232-label.webp"
-  }
+  },
+  "tint": "#e9d9c2",
+  "deep": "#724f1c"
  },
  {
   "id": "r161484",
@@ -626,7 +698,9 @@ window.WINES = [
    "bottle": "img/r161484-bottle.webp",
    "label": "img/r161484-label.webp",
    "glass": "img/r161484-glass.webp"
-  }
+  },
+  "tint": "#e9ddc2",
+  "deep": "#72581c"
  },
  {
   "id": "r161836",
@@ -646,7 +720,9 @@ window.WINES = [
    "bottle": "img/r161836-bottle.webp",
    "label": "img/r161836-label.webp",
    "glass": "img/r161836-glass.webp"
-  }
+  },
+  "tint": "#e9d5c2",
+  "deep": "#72461c"
  },
  {
   "id": "r159607",
@@ -666,7 +742,9 @@ window.WINES = [
    "bottle": "img/r159607-bottle.webp",
    "label": "img/r159607-label.webp",
    "glass": "img/r159607-glass.webp"
-  }
+  },
+  "tint": "#e9e0c2",
+  "deep": "#725e1c"
  },
  {
   "id": "r160740",
@@ -686,6 +764,8 @@ window.WINES = [
    "bottle": "img/r160740-bottle.webp",
    "label": "img/r160740-label.webp",
    "glass": "img/r160740-glass.webp"
-  }
+  },
+  "tint": "#e9d9c2",
+  "deep": "#6f4f1e"
  }
 ];

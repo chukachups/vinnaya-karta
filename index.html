@@ -6,100 +6,101 @@
 <meta name="claude:viewport-fit-sides" content="cover">
 <title>Винная карта</title>
 <meta name="description" content="Наша тетрадь белых вин из SimpleWine: что попробовали и что взять дальше.">
+<meta name="theme-color" content="#e3da78">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8' fill='%231c2a1e'/%3E%3Cpath d='M10 6h12l-1 8a5 5 0 0 1-10 0z' fill='%23e3da78'/%3E%3Cpath d='M16 19v6m-4 2h8' stroke='%23e3da78' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Golos+Text:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;600;800&family=Manrope:wght@400;500;600;700&family=Cormorant+Garamond:ital,wght@1,500;1,600&display=swap">
 <link rel="stylesheet" href="assets/style.css">
 </head>
 <body>
 
-<header class="top">
-  <div class="top__in">
-    <a class="brand" href="#top" aria-label="Винная карта, наверх">
-      <svg class="brand__mark" viewBox="0 0 24 32" aria-hidden="true"><path d="M5 2h14l-1 9a6 6 0 0 1-12 0L5 2Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 8h11.6l-.4 3a5.4 5.4 0 0 1-10.8 0Z" fill="currentColor" opacity=".35"/><path d="M12 17v11M7 30h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span>Винная карта</span>
-    </a>
-    <nav class="nav" aria-label="Разделы">
-      <a href="#tried">Попробовали <sup data-count="tried"></sup></a>
-      <a href="#next">Дальше <sup data-count="plan"></sup></a>
+<header class="bar">
+  <div class="bar__in">
+    <a class="logo" href="#top"><span class="logo__dot"></span>Винная карта</a>
+    <nav class="bar__nav" aria-label="Разделы">
+      <a href="#tried">Попробовали</a>
+      <a href="#next">Дальше</a>
       <a href="#taste">Наш вкус</a>
     </nav>
-    <label class="search">
-      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
-      <input id="q" type="search" placeholder="Сорт, страна, винодельня" aria-label="Поиск по вину">
+    <label class="find">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Найти вино" aria-label="Поиск по сорту, стране, винодельне">
     </label>
   </div>
 </header>
 
 <main id="top">
-  <section class="hero">
-    <div class="hero__text">
-      <p class="eyebrow">Тетрадь дегустаций · SimpleWine</p>
-      <h1>Белое, сухое,<br><em>с ярким ароматом</em></h1>
-      <p class="lede">Всё, что мы попробовали, с честными комментариями, и короткий список того, что взять в следующий раз.</p>
-      <dl class="stats">
-        <div><dt>попробовали</dt><dd data-count="tried"></dd></div>
-        <div><dt>в «Отлично»</dt><dd data-count="ok"></dd></div>
-        <div><dt>заказано</dt><dd data-count="ord"></dd></div>
-        <div><dt>в планах</dt><dd data-count="next"></dd></div>
+  <section class="poster" aria-label="Винная карта">
+    <div class="poster__stage">
+      <h1 class="poster__title" aria-label="Винная карта">
+        <span class="poster__w1" aria-hidden="true">Винная</span>
+        <span class="poster__w2" aria-hidden="true">карта</span>
+      </h1>
+      <div class="poster__bottles" id="heroBottles"></div>
+    </div>
+    <div class="poster__foot">
+      <p class="poster__lede">Тетрадь белых вин из&nbsp;SimpleWine. Что мы попробовали, что сказали о&nbsp;каждом и&nbsp;что взять в&nbsp;следующий раз.</p>
+      <dl class="poster__stats">
+        <div><dd data-count="tried"></dd><dt>попробовали</dt></div>
+        <div><dd data-count="ok"></dd><dt>в «Отлично»</dt></div>
+        <div><dd data-count="ord"></dd><dt>заказано</dt></div>
+        <div><dd data-count="next"></dd><dt>в планах</dt></div>
       </dl>
     </div>
-    <figure class="shelf" aria-label="Три любимых вина">
-      <div class="shelf__row" id="shelf"></div>
-      <figcaption>Любимцы: <span id="shelfNames"></span></figcaption>
-    </figure>
   </section>
 
-  <section class="block" id="tried" aria-labelledby="h-tried">
-    <div class="block__head">
-      <h2 id="h-tried">Попробовали</h2>
-      <div class="seg" role="group" aria-label="Фильтр по оценке" data-for="tried">
-        <button type="button" data-f="all" aria-pressed="true">Все <span data-count="tried"></span></button>
-        <button type="button" data-f="ok" aria-pressed="false">Отлично <span data-count="ok"></span></button>
-        <button type="button" data-f="mid" aria-pressed="false">Обычно <span data-count="mid"></span></button>
-        <button type="button" data-f="bad" aria-pressed="false">Не зашло <span data-count="bad"></span></button>
+  <div class="ticker" aria-hidden="true"><div class="ticker__track" id="ticker"></div></div>
+
+  <div class="countries" id="countries" role="group" aria-label="Фильтр по стране"></div>
+
+  <section class="sect" id="tried" aria-labelledby="h-tried">
+    <header class="sect__head">
+      <h2 id="h-tried">Попробовали<sup data-count="tried"></sup></h2>
+      <div class="pills" role="group" aria-label="Фильтр по оценке" data-for="tried">
+        <button type="button" data-f="all" aria-pressed="true">Все</button>
+        <button type="button" data-f="ok" aria-pressed="false">★ Отлично</button>
+        <button type="button" data-f="mid" aria-pressed="false">◐ Обычно</button>
+        <button type="button" data-f="bad" aria-pressed="false">✕ Не зашло</button>
       </div>
+    </header>
+    <div class="wall" id="wall-tried"></div>
+    <p class="none" id="none-tried" hidden>Ничего не нашлось. Попробуйте другой запрос или страну.</p>
+  </section>
+
+  <section class="sect" id="next" aria-labelledby="h-next">
+    <header class="sect__head">
+      <h2 id="h-next">Что взять дальше<sup data-count="plan"></sup></h2>
+      <div class="pills" role="group" aria-label="Фильтр по статусу" data-for="next">
+        <button type="button" data-f="all" aria-pressed="true">Все</button>
+        <button type="button" data-f="ord" aria-pressed="false">Заказано</button>
+        <button type="button" data-f="next" aria-pressed="false">Ещё не пробовали</button>
+      </div>
+    </header>
+    <p class="sect__note">Сначала заказанные, дальше по цене. Ароматичность из карточки SimpleWine, от 1 до 5.</p>
+    <div class="wall" id="wall-next"></div>
+    <p class="none" id="none-next" hidden>Ничего не нашлось. Попробуйте другой запрос или страну.</p>
+  </section>
+
+  <section class="taste" id="taste" aria-labelledby="h-taste">
+    <h2 id="h-taste" class="sr">Наш вкус</h2>
+    <div class="taste__col taste__col--yes">
+      <p class="taste__big">Да</p>
+      <ul>
+        <li>сухое белое</li><li>яркий аромат с первого вдоха</li><li>совиньон блан</li><li>гевюрцтраминер и мускат</li><li>вионье и мальвазия</li><li>лёгкий оранж</li><li>Colterenzio, Cantina Terlan, Loco Cimbali</li>
+      </ul>
     </div>
-    <div class="grid" id="grid-tried"></div>
-    <p class="none" id="none-tried" hidden>По запросу ничего не нашлось.</p>
-  </section>
-
-  <section class="block" id="next" aria-labelledby="h-next">
-    <div class="block__head">
-      <h2 id="h-next">Что взять дальше</h2>
-      <div class="seg" role="group" aria-label="Фильтр по статусу" data-for="next">
-        <button type="button" data-f="all" aria-pressed="true">Все <span data-count="plan"></span></button>
-        <button type="button" data-f="ord" aria-pressed="false">Заказано <span data-count="ord"></span></button>
-        <button type="button" data-f="next" aria-pressed="false">Ещё не пробовали <span data-count="next"></span></button>
-      </div>
-    </div>
-    <p class="hint">Отсортировано по цене. Ароматичность взята из карточки SimpleWine, шкала от 1 до 5.</p>
-    <div class="grid" id="grid-next"></div>
-    <p class="none" id="none-next" hidden>По запросу ничего не нашлось.</p>
-  </section>
-
-  <section class="block taste" id="taste" aria-labelledby="h-taste">
-    <h2 id="h-taste">Наш вкус</h2>
-    <div class="taste__cols">
-      <div>
-        <h3>Нравится</h3>
-        <ul class="pills pills--yes">
-          <li>сухое белое</li><li>яркий аромат</li><li>совиньон блан</li><li>гевюрцтраминер</li><li>мускат</li><li>вионье</li><li>лёгкий оранж</li><li>Альто-Адидже</li>
-        </ul>
-        <p>Ароматика с первого вдоха: цитрус, персик, цветы, смородиновый лист. Любимые винодельни: Colterenzio, Cantina Terlan, Loco Cimbali.</p>
-      </div>
-      <div>
-        <h3>Не наше</h3>
-        <ul class="pills pills--no">
-          <li>тяжёлый оранж</li><li>простое шардоне</li><li>кислый рислинг</li><li>шипучее вино</li>
-        </ul>
-        <p>Тяжёлое и крепкое, как Orange Gold. Слишком кислое, как рислинги. Шипучее, как Vinho Verde.</p>
-      </div>
+    <div class="taste__col taste__col--no">
+      <p class="taste__big">Нет</p>
+      <ul>
+        <li>тяжёлый оранж, «как виски»</li><li>простое шардоне</li><li>кислый рислинг</li><li>шипучее, как Vinho Verde</li>
+      </ul>
     </div>
   </section>
 
-  <footer class="foot">
-    <p>Фото, «вкусоароматика» и цены взяты с simplewine.ru 23 октября 2026. Цены и наличие могут меняться.</p>
+  <footer class="end">
+    <p class="end__mark">Винная карта</p>
+    <p>Фото, «вкусоароматика» и цены взяты с simplewine.ru 23&nbsp;октября 2026. Цены и наличие могут меняться.</p>
   </footer>
 </main>
 
@@ -107,9 +108,9 @@
   <div class="sheet__scrim" data-close></div>
   <article class="sheet__card" role="dialog" aria-modal="true" aria-labelledby="sheetName">
     <button class="sheet__x" type="button" data-close aria-label="Закрыть">×</button>
-    <div class="sheet__media">
+    <div class="sheet__media" id="sheetMedia">
       <div class="sheet__main"><img id="sheetImg" alt=""></div>
-      <div class="sheet__thumbs" id="sheetThumbs"></div>
+      <div class="sheet__views" id="sheetViews"></div>
     </div>
     <div class="sheet__info" id="sheetInfo"></div>
   </article>
