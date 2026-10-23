@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Винная карта</title>
+<meta name="description" content="Наша тетрадь белых вин из SimpleWine: что попробовали и что взять дальше.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Prata&family=Golos+Text:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="top">
+  <div class="top__in">
+    <a class="brand" href="#top" aria-label="Винная карта, наверх">
+      <svg class="brand__mark" viewBox="0 0 24 32" aria-hidden="true"><path d="M5 2h14l-1 9a6 6 0 0 1-12 0L5 2Z" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.2 8h11.6l-.4 3a5.4 5.4 0 0 1-10.8 0Z" fill="currentColor" opacity=".35"/><path d="M12 17v11M7 30h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <span>Винная карта</span>
+    </a>
+    <nav class="nav" aria-label="Разделы">
+      <a href="#tried">Попробовали <sup data-count="tried"></sup></a>
+      <a href="#next">Дальше <sup data-count="plan"></sup></a>
+      <a href="#taste">Наш вкус</a>
+    </nav>
+    <label class="search">
+      <svg viewBox="0 0 20 20" aria-hidden="true"><circle cx="9" cy="9" r="6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="m13.5 13.5 4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      <input id="q" type="search" placeholder="Сорт, страна, винодельня" aria-label="Поиск по вину">
+    </label>
+  </div>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <div class="hero__text">
+      <p class="eyebrow">Тетрадь дегустаций · SimpleWine</p>
+      <h1>Белое, сухое,<br><em>с ярким ароматом</em></h1>
+      <p class="lede">Всё, что мы попробовали, с честными комментариями, и короткий список того, что взять в следующий раз.</p>
+      <dl class="stats">
+        <div><dt>попробовали</dt><dd data-count="tried"></dd></div>
+        <div><dt>в «Отлично»</dt><dd data-count="ok"></dd></div>
+        <div><dt>заказано</dt><dd data-count="ord"></dd></div>
+        <div><dt>в планах</dt><dd data-count="next"></dd></div>
+      </dl>
+    </div>
+    <figure class="shelf" aria-label="Три любимых вина">
+      <div class="shelf__row" id="shelf"></div>
+      <figcaption>Любимцы: <span id="shelfNames"></span></figcaption>
+    </figure>
+  </section>
+
+  <section class="block" id="tried" aria-labelledby="h-tried">
+    <div class="block__head">
+      <h2 id="h-tried">Попробовали</h2>
+      <div class="seg" role="group" aria-label="Фильтр по оценке" data-for="tried">
+        <button type="button" data-f="all" aria-pressed="true">Все <span data-count="tried"></span></button>
+        <button type="button" data-f="ok" aria-pressed="false">Отлично <span data-count="ok"></span></button>
+        <button type="button" data-f="mid" aria-pressed="false">Обычно <span data-count="mid"></span></button>
+        <button type="button" data-f="bad" aria-pressed="false">Не зашло <span data-count="bad"></span></button>
+      </div>
+    </div>
+    <div class="grid" id="grid-tried"></div>
+    <p class="none" id="none-tried" hidden>По запросу ничего не нашлось.</p>
+  </section>
+
+  <section class="block" id="next" aria-labelledby="h-next">
+    <div class="block__head">
+      <h2 id="h-next">Что взять дальше</h2>
+      <div class="seg" role="group" aria-label="Фильтр по статусу" data-for="next">
+        <button type="button" data-f="all" aria-pressed="true">Все <span data-count="plan"></span></button>
+        <button type="button" data-f="ord" aria-pressed="false">Заказано <span data-count="ord"></span></button>
+        <button type="button" data-f="next" aria-pressed="false">Ещё не пробовали <span data-count="next"></span></button>
+      </div>
+    </div>
+    <p class="hint">Отсортировано по цене. Ароматичность взята из карточки SimpleWine, шкала от 1 до 5.</p>
+    <div class="grid" id="grid-next"></div>
+    <p class="none" id="none-next" hidden>По запросу ничего не нашлось.</p>
+  </section>
+
+  <section class="block taste" id="taste" aria-labelledby="h-taste">
+    <h2 id="h-taste">Наш вкус</h2>
+    <div class="taste__cols">
+      <div>
+        <h3>Нравится</h3>
+        <ul class="pills pills--yes">
+          <li>сухое белое</li><li>яркий аромат</li><li>совиньон блан</li><li>гевюрцтраминер</li><li>мускат</li><li>вионье</li><li>лёгкий оранж</li><li>Альто-Адидже</li>
+        </ul>
+        <p>Ароматика с первого вдоха: цитрус, персик, цветы, смородиновый лист. Любимые винодельни: Colterenzio, Cantina Terlan, Loco Cimbali.</p>
+      </div>
+      <div>
+        <h3>Не наше</h3>
+        <ul class="pills pills--no">
+          <li>тяжёлый оранж</li><li>простое шардоне</li><li>кислый рислинг</li><li>шипучее вино</li>
+        </ul>
+        <p>Тяжёлое и крепкое, как Orange Gold. Слишком кислое, как рислинги. Шипучее, как Vinho Verde.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <p>Фото, «вкусоароматика» и цены взяты с simplewine.ru 23 октября 2026. Цены и наличие могут меняться.</p>
+  </footer>
+</main>
+
+<div class="sheet" id="sheet" hidden>
+  <div class="sheet__scrim" data-close></div>
+  <article class="sheet__card" role="dialog" aria-modal="true" aria-labelledby="sheetName">
+    <button class="sheet__x" type="button" data-close aria-label="Закрыть">×</button>
+    <div class="sheet__media">
+      <div class="sheet__main"><img id="sheetImg" alt=""></div>
+      <div class="sheet__thumbs" id="sheetThumbs"></div>
+    </div>
+    <div class="sheet__info" id="sheetInfo"></div>
+  </article>
+</div>
+
+<script src="assets/wines.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
