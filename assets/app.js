@@ -61,6 +61,13 @@
       (sw.tags && sw.tags.length ? '<span class="crowd__tags">' + sw.tags.map(function (t) { return '<span>' + esc(t.toLowerCase()) + '</span>'; }).join('') + '</span>' : '') +
     '</div>';
   }
+  // Где купить в Москве — для позиций не из SimpleWine.
+  function where(msk) {
+    if (!msk || !msk.where) return '';
+    return '<div class="where"><span class="who">Где купить в Москве</span>' + msk.where.map(function (s) {
+      return '<a href="' + s.url + '" target="_blank" rel="noopener"><span>' + esc(s.name) + ' ↗</span><b>' + esc(s.price) + '</b></a>';
+    }).join('') + '<small>Цены из карточек магазинов, наличие лучше уточнить.</small></div>';
+  }
   function byId(id) { for (var i = 0; i < W.length; i++) if (W[i].id === id) return W[i]; }
 
   // ---- счётчики ----
@@ -107,7 +114,7 @@
     var tag = w.tag ? '<span class="card__tag' + (w.tag === 'Рискованно' ? ' card__tag--risk' : w.offsite ? ' card__tag--off' : '') + '">' + esc(w.tag) + '</span>' : '';
     var foot = tried
       ? '<span class="sugar">' + esc(kind(w)) + '</span><span class="go">SimpleWine ↗</span>'
-      : (w.price ? '<span class="price">' + rub(w.price) + '</span>' : '<span class="offsite">нет в SimpleWine · ' + esc(w.shop) + '</span>') + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
+      : (w.price ? '<span class="price">' + rub(w.price) + '</span>' : (w.msk ? '<span class="price">≈ ' + rub(w.msk.avg) + '</span><span class="offsite">средняя по Москве</span>' : '<span class="offsite">нет в SimpleWine · ' + esc(w.shop) + '</span>')) + (w.aroma ? '<span class="aroma">аромат ' + dots(w.aroma) + '</span>' : '');
     return '<button type="button" class="card card--' + w.status + '" data-open="' + w.id + '">' +
       '<span class="card__plate" style="--c:' + tint(w) + '">' +
         '<span class="stamp stamp--' + w.status + '"><span><b>' + s[0] + '</b>' + s[1] + '</span></span>' +
@@ -210,11 +217,13 @@
         (w.grape ? '<dt>Виноград</dt><dd>' + esc(w.grape) + '</dd>' : '') +
         (w.sw && w.sw.serve ? '<dt>Подавать</dt><dd>' + esc(w.sw.serve) + '</dd>' : '') +
         (w.sw && w.sw.food ? '<dt>К столу</dt><dd>' + esc(w.sw.food) + '</dd>' : '') +
+        (w.msk ? '<dt>В Москве</dt><dd>≈ ' + rub(w.msk.avg) + ' <span style="color:var(--ink-3);font-weight:500">' + w.msk.range + ' ₽, ' + w.msk.date + '</span></dd>' : '') +
         (!tried && w.price ? '<dt>Цена</dt><dd>' + rub(w.price) + ' <span style="color:var(--ink-3);font-weight:500">на 23.10</span></dd>' : '') +
       '</dl>' +
       (w.sw && w.sw.fact ? '<details class="fact"><summary>Это интересно</summary><p>' + esc(w.sw.fact) + '</p></details>' : '') +
       '<a class="btn" href="' + w.url + '" target="_blank" rel="noopener">' + (w.shop ? 'Открыть в ' + esc(w.shop) : 'Открыть в SimpleWine') + ' ↗</a>' +
-      (w.offsite ? '<p class="offsite-note">Этого нет в ассортименте SimpleWine. Ссылка ведёт в зарубежный магазин: там фото и описание, в России позицию придётся поискать.</p>' : '');
+      (w.offsite ? '<p class="offsite-note">Этого нет в ассортименте SimpleWine. Ссылка выше ведёт на страницу с фото и описанием' + (w.msk ? ', а купить можно в московских магазинах ниже.' : '.') + '</p>' : '') +
+      where(w.msk);
     sheet.hidden = false;
     document.body.style.overflow = 'hidden';
     sheet.querySelector('.sheet__x').focus();

@@ -162,6 +162,11 @@ button { font: inherit; color: inherit; }
 .card__foot { margin-top: auto; padding-top: 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px; }
 .price { font: 800 22px/1 var(--f-big); letter-spacing: -.04em; white-space: nowrap; }
 .offsite { font-size: 12px; font-weight: 700; color: var(--ink-3); }
+.where { display: grid; gap: 6px; }
+.where a { display: flex; justify-content: space-between; gap: 12px; padding: 10px 14px; border-radius: 12px; background: var(--paper); text-decoration: none; font-weight: 600; font-size: 14px; }
+.where a:hover { background: var(--straw-2); }
+.where b { font: 800 14px var(--f-big); white-space: nowrap; }
+.where small { color: var(--ink-3); font-size: 12px; }
 .offsite-note { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-3); }
 .dots { display: inline-flex; gap: 3px; }
 .dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--rule); }
