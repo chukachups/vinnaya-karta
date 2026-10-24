@@ -98,6 +98,9 @@ button { font: inherit; color: inherit; }
 .cats button[aria-pressed="true"] { color: var(--ink); }
 .cats button::after { content: ""; position: absolute; left: 0; right: 0; bottom: -2px; height: 4px; background: var(--straw); transform: scaleX(0); transform-origin: left; transition: transform .4s var(--ease); }
 .cats button[aria-pressed="true"]::after { transform: scaleX(1); }
+.cats button i.cats__ord { display: grid; place-items: center; width: 18px; height: 18px; background: var(--bottle); color: var(--straw); box-shadow: none; font: 800 11px/1 var(--f-text); font-style: normal; }
+/* Вкладка «Заказано»: только заказанные бутылки, без «Попробовали» и полосы ожидания. */
+.only-ord #tried, .only-ord #await, .only-ord #next .pills, .only-ord #next .sect__note { display: none; }
 html { scroll-padding-top: 140px; }
 
 /* ---------- страны ---------- */

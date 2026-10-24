@@ -19,7 +19,9 @@
   // Категории в порядке на сайте; точка — цвет напитка в бокале.
   var CATS = [['Белое', '#f1e7a4'], ['Оранжевое', '#e9a95c'], ['Розовое', '#f2b8c0'], ['Красное', '#7d1f2c'],
     ['Игристое', '#f4ecc2'], ['Виски', '#c68a3e']];
-  var SLUG = { 'Белое': 'beloe', 'Оранжевое': 'oranzhevoe', 'Розовое': 'rozovoe', 'Красное': 'krasnoe', 'Игристое': 'igristoe', 'Виски': 'viski' };
+  var SLUG = { 'Белое': 'beloe', 'Оранжевое': 'oranzhevoe', 'Розовое': 'rozovoe', 'Красное': 'krasnoe', 'Игристое': 'igristoe', 'Виски': 'viski', 'Заказано': 'zakazano' };
+  // Вкладка «Заказано» — не категория, а быстрый переход к заказанным бутылкам всех категорий.
+  var ORD = 'Заказано';
   // Поиск: русские и латинские названия сортов и напитков считаются одним словом.
   var SYN = [
     ['совиньон', 'sauvignon'], ['пино', 'pinot'], ['гевюрц', 'gewurz'], ['шардоне', 'chardonnay'], ['рислинг', 'riesling'],
@@ -40,6 +42,7 @@
   function tint(w) { return COUNTRY[country(w)] || '#e8e5d4'; }
   function type(w) { return w.type || 'вино'; }
   function color(w) { return type(w) === 'виски' ? null : w.color || (/оранж/.test(w.sugar) ? 'оранжевое' : 'белое'); }
+  function inCat(w) { return !state.cat || (state.cat === ORD ? w.status === 'ord' : cat(w) === state.cat); }
   function cat(w) {
     if (type(w) === 'виски') return 'Виски';
     if (type(w) === 'игристое') return 'Игристое';
@@ -133,10 +136,13 @@
   var catBox = document.getElementById('cats');
   function drawCats() {
     var n = {}; W.forEach(function (w) { n[cat(w)] = (n[cat(w)] || 0) + 1; });
-    catBox.innerHTML = [['Все', null]].concat(CATS.filter(function (c) { return n[c[0]]; })).map(function (c) {
+    var ord = W.filter(function (w) { return w.status === 'ord'; }).length;
+    var tabs = [['Все', null]].concat(ord ? [[ORD, 'ord']] : [], CATS.filter(function (c) { return n[c[0]]; }));
+    catBox.innerHTML = tabs.map(function (c) {
       var on = (state.cat || 'Все') === c[0];
+      var dot = c[1] === 'ord' ? '<i class="cats__ord" aria-hidden="true">✓</i>' : c[1] ? '<i style="--c:' + c[1] + '"></i>' : '';
       return '<button type="button" data-cat="' + c[0] + '" aria-pressed="' + on + '">' +
-        (c[1] ? '<i style="--c:' + c[1] + '"></i>' : '') + c[0] + '<sup>' + (c[1] ? n[c[0]] : W.length) + '</sup></button>';
+        dot + c[0] + '<sup>' + (c[1] === 'ord' ? ord : c[1] ? n[c[0]] : W.length) + '</sup></button>';
     }).join('');
     edges();
   }
@@ -153,6 +159,7 @@
     state.cat = b.dataset.cat === 'Все' ? null : b.dataset.cat;
     try { history.replaceState(null, '', state.cat ? '#' + SLUG[state.cat] : location.pathname); } catch (x) {}
     drawCats(); drawCountries(); render();
+    if (state.cat === ORD) toOrdered();
     var act = catBox.querySelector('[aria-pressed="true"]');
     if (act && act.scrollIntoView) act.scrollIntoView({ inline: 'nearest', block: 'nearest' });
   });
@@ -161,7 +168,7 @@
   var cbox = document.getElementById('countries'), ctog = document.getElementById('countryToggle');
   function drawCountries() {
     var n = {};
-    W.forEach(function (w) { if (!state.cat || cat(w) === state.cat) n[country(w)] = (n[country(w)] || 0) + 1; });
+    W.forEach(function (w) { if (inCat(w)) n[country(w)] = (n[country(w)] || 0) + 1; });
     if (state.country && !n[state.country]) state.country = null;
     cbox.innerHTML = '<span class="filter-label">Страна</span>' + Object.keys(n).sort(function (a, b) { return n[b] - n[a]; }).map(function (c) {
       return '<button type="button" data-c="' + esc(c) + '" aria-pressed="' + (c === state.country) + '" style="--c:' + (COUNTRY[c] || '#e8e5d4') + '"><i></i>' +
@@ -222,7 +229,7 @@
 
   function ok(w) {
     if (state.country && country(w) !== state.country) return false;
-    if (state.cat && cat(w) !== state.cat) return false;
+    if (!inCat(w)) return false;
     var max = Q.max || state.max;
     if (max && !(cost(w) && cost(w) <= max)) return false;
     return Q.words.every(function (alt) {
@@ -256,12 +263,22 @@
   function render() {
     order = [];
     fill('tried', [['ok', 'Отлично'], ['mid', 'Обычно'], ['bad', 'Не зашло']], state.tried);
-    fill('next', [['ord', 'Заказано', SORTS.cheap], ['next', 'Ещё не пробовали', SORTS.cheap]], state.next);
+    var only = state.cat === ORD;
+    document.body.classList.toggle('only-ord', only);
+    document.getElementById('h-next').firstChild.nodeValue = only ? 'Заказано' : 'Что взять дальше';
+    fill('next', [['ord', 'Заказано', SORTS.cheap], ['next', 'Ещё не пробовали', SORTS.cheap]], only ? 'ord' : state.next);
     // Счётчики у заголовков разделов — с учётом категории, страны, цены и поиска.
     var inTried = W.filter(function (w) { return ok(w) && isTried(w); }).length;
     var inNext = W.filter(function (w) { return ok(w) && !isTried(w); }).length;
     document.querySelector('#h-tried sup').textContent = inTried;
     document.querySelector('#h-next sup').textContent = inNext;
+  }
+
+  // Прокрутка к заказанным: заголовок раздела — сразу под закреплёнными вкладками.
+  function toOrdered() {
+    var bar = catBox.parentElement, sect = document.getElementById('next');
+    var y = sect.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(bar).top) - bar.offsetHeight;
+    window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
   }
 
   // ---- заказанное ждёт оценки ----
@@ -413,6 +430,7 @@
   });
 
   render();
+  if (state.cat === ORD) requestAnimationFrame(toOrdered);
   // Ссылка вида …/#v-t01 сразу открывает вино.
   var deep = location.hash.match(/^#v-(.+)$/);
   if (deep && byId(deep[1])) open(byId(deep[1]));
