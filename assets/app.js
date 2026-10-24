@@ -78,6 +78,22 @@
       return '<div class="prof__row"><span>' + k + '</span><span class="prof__bar" aria-label="' + n + ' из 5">' + seg + '</span><b>' + n + '</b></div>';
     }).join('') + '</div>';
   }
+  // Нужен ли аэратор: по типу, цвету, танинам, телу и дубу. Ручная правка — поле aerate: [вердикт, пояснение] в wines.js.
+  function aerate(w) {
+    if (w.aerate) return w.aerate;
+    var t = type(w), c = color(w), sc = (w.sw && w.sw.scales) || {}, st = (w.sw && w.sw.style) || '';
+    var oak = /выдерж/.test(st) && !/не выдерж/.test(st), tan = sc['Танины'] || 0, body = sc['Тело'] || 0;
+    if (t === 'виски') return ['Не нужен', 'дайте постоять в бокале 5–10 минут, пара капель воды раскроет аромат'];
+    if (t === 'игристое') return ['Нет', 'выбьет пузырьки — открывать охлаждённым и сразу разливать'];
+    if (c === 'красное') {
+      if (tan >= 4 || body >= 4) return ['Да', 'смягчит танины: через аэратор или в декантер на 30–60 минут'];
+      if (tan === 3) return ['Можно', '15–20 минут на воздухе раскроют фрукты'];
+      return ['Не нужен', 'лёгкое красное — достаточно покрутить в бокале'];
+    }
+    if (c === 'оранжевое') return ['Можно', 'оранж раскрывается с воздухом — аэратор или 15–20 минут в декантере'];
+    if (oak || body >= 4) return ['По желанию', 'плотное белое станет мягче, но можно просто дать постоять в бокале 10 минут'];
+    return ['Не нужен', 'свежие ароматы улетучатся — пить сразу, охлаждённым'];
+  }
   // Что пишут покупатели: средняя оценка и частые слова из отзывов.
   function crowd(sw) {
     if (!sw || !sw.rating) return '';
@@ -347,6 +363,7 @@
         '<dt>Тип</dt><dd>' + esc(kind(w)) + '</dd>' +
         (w.grape ? '<dt>Виноград</dt><dd>' + esc(w.grape) + '</dd>' : '') +
         (w.sw && w.sw.serve ? '<dt>Подавать</dt><dd>' + esc(w.sw.serve) + '</dd>' : '') +
+        (function (a) { return '<dt>Аэратор</dt><dd>' + esc(a[0]) + ' <span style="color:var(--ink-3);font-weight:500">— ' + esc(a[1]) + '</span></dd>'; })(aerate(w)) +
         (w.sw && w.sw.food ? '<dt>К столу</dt><dd>' + esc(w.sw.food) + '</dd>' : '') +
         (w.drank ? '<dt>Пробовали</dt><dd>' + esc(w.drank) + '</dd>' : '') +
         (w.paid ? '<dt>Брали за</dt><dd>' + rub(w.paid) + (w.price && w.price !== w.paid ? ' <span style="color:var(--ink-3);font-weight:500">сейчас ' + rub(w.price) + '</span>' : '') + '</dd>' : '') +
