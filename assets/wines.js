@@ -2898,12 +2898,13 @@ window.WINES = [
   "grape": "цвайгельт"
  },
  {
-  "status": "ord",
+  "status": "mid",
   "name": "Loco Cimbali Chardonnay Reserve 2022",
   "producer": "Loco Cimbali",
   "region": "Россия, Крым, Балаклава",
   "sugar": "сухое",
-  "note": "Шардоне в стиле резерв — не «простое», а с выдержкой. Интересно, зайдёт ли после Pinot Blanc и Viognier этой же винодельни.",
+  "note": "Супер обычное, никакого вау не произошло — проходное вино",
+  "drank": "24 октября 2026",
   "url": "https://simplewine.ru/catalog/product/loco_cimbali_chardonnay_2022_075_160232/",
   "id": "w160232",
   "type": "вино",
