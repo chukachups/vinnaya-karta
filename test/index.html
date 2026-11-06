@@ -6,7 +6,7 @@
 <title>Винная карта · тест</title>
 <meta name="robots" content="noindex">
 <meta name="description" content="Тестовая версия тетради вин: тёмная, рубиновая.">
-<meta name="theme-color" content="#121014">
+<meta name="theme-color" content="#1c1d21">
 <link rel="icon" href="../icons/icon.svg" type="image/svg+xml">
 <link rel="icon" href="../icons/favicon-32.png" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
@@ -36,20 +36,17 @@
     <div class="hero__in">
       <div class="hero__text">
         <p class="eyebrow">Тетрадь вин · SimpleWine</p>
-        <h1 class="hero__title">Винная<br><em>карта</em></h1>
+        <h1 class="hero__title">Винная карта</h1>
         <p class="hero__lede">Вина, игристое и&nbsp;виски, которые мы попробовали. Что сказали о&nbsp;каждом и&nbsp;что взять в&nbsp;следующий раз.</p>
+        <a class="hero__go" href="#tried">Смотреть вина</a>
       </div>
       <div class="hero__stage">
-        <svg class="orbits" viewBox="0 0 600 600" aria-hidden="true">
-          <g class="orbits__spin">
-            <ellipse cx="300" cy="300" rx="270" ry="150" transform="rotate(-24 300 300)"/>
-            <ellipse cx="300" cy="300" rx="270" ry="150" transform="rotate(24 300 300)"/>
-            <circle cx="300" cy="300" r="214" class="orbits__thin"/>
-            <circle cx="54" cy="190" r="5" class="orbits__dot"/>
-            <circle cx="546" cy="190" r="5" class="orbits__dot"/>
-            <circle cx="300" cy="86" r="3.5" class="orbits__dot"/>
-            <circle cx="300" cy="514" r="3.5" class="orbits__dot"/>
-          </g>
+        <svg class="lines" viewBox="0 0 500 500" aria-hidden="true">
+          <circle cx="250" cy="250" r="176"/>
+          <path d="M18 352C92 128 360 60 486 214"/>
+          <circle class="lines__dot" cx="74" cy="250" r="4"/>
+          <circle class="lines__dot" cx="426" cy="250" r="4"/>
+          <circle class="lines__dot lines__dot--s" cx="250" cy="74" r="2.5"/>
         </svg>
         <div class="hero__glow" aria-hidden="true"></div>
         <div class="hero__bottles" id="heroBottles"></div>
